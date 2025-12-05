@@ -1,5 +1,5 @@
 import {Routes, Route, Navigate} from 'react-router-dom'
-import {Finance} from '../shared/components/Finance/Finance'
+import {Finance} from '../pages/Finance/Finance'
 
 export const AppRoutes = () => {
     return (
