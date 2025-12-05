@@ -21,5 +21,24 @@ export const Theme = createTheme({
             primary: '#c4c4cc',
             secondary: '#e1e1e6'
         }
-    }    
+    },
+    components: {
+        MuiTextField: {
+            styleOverrides: {
+                root: {
+                    "& .MuiFilledInput-root": {
+                        backgroundColor: '#121214',
+                        
+                    }
+                }
+            }
+        },
+        MuiInputLabel: {
+            styleOverrides: {
+                root: {
+                    color: '#c4c4cc'
+                }
+            }
+        }
+    }
 })

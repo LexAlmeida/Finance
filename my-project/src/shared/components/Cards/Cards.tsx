@@ -19,18 +19,23 @@ const IconMap: {[key: string]: React.ElementType} = {
 const MyCard = ({title, value, icon}: ICard) => {
     const IconComponent = IconMap[icon];
     const theme = Theme;
-    return ( 
-        <Box sx={{flexGrow: 1/5}} color={theme.palette.text.primary}>
-            <Card>
-                <Grid container spacing={2} direction='column' p={4}>
-                    <Box display={"flex"} justifyContent='space-between'>
-                        <Typography variant="h6">{title}</Typography>
-                        <IconComponent/>
-                    </Box>
-                    <Typography variant="h4">{value}</Typography>
-                </Grid>
-            </Card>
-        </Box>  
+    return (
+            <Box sx={{
+                display: 'flex', 
+                justifyContent: 'center', 
+                gap: 3, 
+                mt: 2}} 
+                color={theme.palette.text.primary}>
+                <Card sx={{width:400}}>
+                    <Grid container spacing={2} direction='column' p={4}>
+                        <Box display={"flex"} justifyContent='space-between'>
+                            <Typography variant="h6">{title}</Typography>
+                            <IconComponent/>
+                        </Box>
+                        <Typography variant="h4">{value}</Typography>
+                    </Grid>
+                </Card>
+            </Box> 
     )
 }
 
