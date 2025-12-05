@@ -1,14 +1,10 @@
 import { Button } from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
+import { NovaTransacao } from "../Dialog/Dialog";
 
 export const ButtonNew = () => {
-    function handleClick(){
-        alert('Botao clicado');
-    }
     return (
-        <Button onClick={handleClick}>
-            Nova transação
-        </Button>
+        <NovaTransacao/>
     )
 }
 
