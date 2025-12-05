@@ -1,45 +1,62 @@
 import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp';
 import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown';
+import CloseIcon from '@mui/icons-material/Close';
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from "@mui/material"
 import { useState } from "react";
+import { BoxInputs } from '../Box/Box';
 
 interface INovaTransacao {
     title: string, 
     icon: string
 }
+interface IICon {
+    icon: string,
+    onClick: () => void
+}
 const IconMap: {[key: string]: React.ElementType} = {
     arrowUp: ArrowCircleUpIcon,
-    arrowDown: ArrowCircleDownIcon
+    arrowDown: ArrowCircleDownIcon,
+    close: CloseIcon
 }
 
 const BotoesDialog = ({icon, title}: INovaTransacao) => {
     const IconComponent = IconMap[icon];
     return (
-            <Button>
-                <IconComponent/>
-                {title}
-            </Button>
+        <Button>
+            <IconComponent/>
+            {title}
+        </Button>
+    )
+}
+const BotaoClose = ({icon, onClick}: IICon) => {
+    const IconComponent = IconMap[icon]
+    return(
+        <Button onClick={onClick}>
+            <IconComponent/>
+        </Button>
     )
 }
 
 export const NovaTransacao = () => {
     const [open, setOpen] = useState(false);
-    function handleClick() {
+    function handleClickOpen() {
         setOpen(true);
+    }
+    function handleClickClose(){
+        setOpen(false);
     }
     return (
     <>
-        <Button onClick={handleClick}>
+        <Button onClick={handleClickOpen}>
             Nova transação
         </Button>
         <Dialog open={open}>
-            <DialogTitle>Nova Transação</DialogTitle>
+            <Box display='flex'>
+                <DialogTitle>Nova Transação</DialogTitle>
+                <BotaoClose icon="close" onClick={handleClickClose}/>
+            </Box>
             <DialogContent>
-                <Box display='flex' flexDirection='column'>
-                    <TextField variant="filled" id="descricao" label="Descrição" ></TextField>
-                    <TextField variant="filled" id="preco" label="Preço" ></TextField>
-                    <TextField variant="filled" id="categoria" label="Categoria" ></TextField>
-                </Box>
+                <BoxInputs/>
             </DialogContent>
             <DialogActions sx={{justifyContent:'center'}}>
                 <Box display='flex' flexDirection='column'>
