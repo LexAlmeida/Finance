@@ -1,72 +1,114 @@
 import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp';
 import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown';
 import CloseIcon from '@mui/icons-material/Close';
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from "@mui/material"
-import { useState } from "react";
+import { Box, Button, Dialog, DialogContent, DialogTitle, IconButton, Stack, type SxProps, type Theme } from "@mui/material"
+import { useState, type ReactNode } from "react";
 import { BoxInputs } from '../Box/Box';
 
-interface INovaTransacao {
-    title: string, 
-    icon: string
-}
-interface IICon {
-    icon: string,
-    onClick: () => void
-}
-const IconMap: {[key: string]: React.ElementType} = {
-    arrowUp: ArrowCircleUpIcon,
-    arrowDown: ArrowCircleDownIcon,
-    close: CloseIcon
+interface IBotoesDialog {
+    title: string,
+    onClick?: () => void,
+    sx?: SxProps<Theme>,
+    startIcon?: ReactNode;
 }
 
-const BotoesDialog = ({icon, title}: INovaTransacao) => {
-    const IconComponent = IconMap[icon];
+const BotoesDialog = ({title, onClick, sx, startIcon}: IBotoesDialog) => {
     return (
-        <Button>
-            <IconComponent/>
+        <Button onClick={onClick} sx={sx} startIcon={startIcon}>
             {title}
-        </Button>
-    )
-}
-const BotaoClose = ({icon, onClick}: IICon) => {
-    const IconComponent = IconMap[icon]
-    return(
-        <Button onClick={onClick}>
-            <IconComponent/>
         </Button>
     )
 }
 
 export const NovaTransacao = () => {
     const [open, setOpen] = useState(false);
-    function handleClickOpen() {
-        setOpen(true);
-    }
-    function handleClickClose(){
-        setOpen(false);
-    }
+    const [typeTransaction, setTypeTransaction] = useState<"entrada"|"saida">("entrada");
+    const handleClickOpen = () => setOpen(true);
+    const handleClickClose = () => setOpen(false);
+    
     return (
     <>
-        <Button onClick={handleClickOpen}>
+        <Button variant='contained' color='primary' onClick={handleClickOpen}>
             Nova transação
         </Button>
-        <Dialog open={open}>
-            <Box display='flex'>
-                <DialogTitle>Nova Transação</DialogTitle>
-                <BotaoClose icon="close" onClick={handleClickClose}/>
-            </Box>
+        <Dialog 
+            open={open} 
+            onClose={handleClickClose}
+            slotProps={{
+                paper: {
+                    sx: {
+                        backgroundColor: 'background.paper',
+                        borderRadius: '6px',
+                        minWidth: '450px',
+                        p: 2
+                    }
+                }
+            }}>
+            <IconButton 
+                onClick={handleClickClose}  
+                sx={{
+                    position: 'absolute',
+                    alignSelf: 'flex-end',
+                    right: '16',
+                    top: '16',
+                    p: 0,
+                    color: 'text.primary'
+                }}>
+                <CloseIcon/>
+            </IconButton>
+
+            <DialogTitle sx={{
+                mb:1,
+                fontWeight: 'bold',
+                color: 'text.secondary'
+            }}>
+                Nova Transação
+            </DialogTitle>  
             <DialogContent>
-                <BoxInputs/>
+                <Stack >
+                    <BoxInputs/>
+                    <Box display='grid' gridTemplateColumns="1fr 1fr" gap={2} mt={1} >
+                        <BotoesDialog 
+                            onClick={() => {setTypeTransaction('entrada')}}
+                            title="Entrada"
+                            sx={{
+                                bgcolor: typeTransaction === 'entrada' ? 'primary.dark' : '#29292e',
+                                color: typeTransaction === 'entrada' ? 'text.secondary' : 'text.primary',
+                                py: 2,
+                                borderRadius: '6px',
+                                textTransform: 'none',
+                                '&:hover':{
+                                    bgcolor: typeTransaction === 'entrada' ? 'primary.main' : 'background.paper'
+                                }
+                            }}
+                            startIcon={<ArrowCircleUpIcon sx={{color: typeTransaction === 'entrada' ? 'text.secondary' : 'primary.main'}}/>}
+                            />
+                        <BotoesDialog 
+                            onClick={() => {setTypeTransaction('saida')}}
+                            title="Saída"
+                            sx={{
+                                bgcolor: typeTransaction === 'saida' ? 'secondary.dark' : '#29292e',
+                                color: typeTransaction === 'saida' ? 'text.secondary' : 'text.primary',
+                                py: 2,
+                                borderRadius: '6px',
+                                textTransform: 'none',
+                                '&:hover':{
+                                    bgcolor: typeTransaction === 'saida' ? 'secondary.main' : 'background.paper'
+                                }
+                            }}
+                            startIcon={<ArrowCircleDownIcon sx={{color: typeTransaction === 'saida' ? 'text.secondary' : 'secondary.main'}}/>}
+                            />
+                    </Box>     
+                    <Button
+                        fullWidth
+                        variant='contained'
+                        color='primary'
+                        sx={{mt:2, py:1.5, fontWeight:'bold', borderRadius:'6px', textTransform:'none'}}   
+                    >Cadastrar</Button>
+                     
+                </Stack>
+                
             </DialogContent>
-            <DialogActions sx={{justifyContent:'center'}}>
-                <Box display='flex' flexDirection='column'>
-                    <Box display='flex'>
-                        <BotoesDialog icon="arrowUp" title="Entrada"/>
-                        <BotoesDialog icon="arrowDown" title="Saída"/>
-                    </Box>
-                    <Button>Cadastrar</Button>
-                </Box>                
-            </DialogActions>
         </Dialog>
     </>
     )

@@ -2,7 +2,7 @@ import { Button } from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
 import { NovaTransacao } from "../Dialog/Dialog";
 
-export const ButtonNew = () => {
+export const NewButton = () => {
     return (
         <NovaTransacao/>
     )

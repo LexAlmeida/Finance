@@ -23,9 +23,25 @@ export const BoxPrincipal = ({children}: IDivPrincipal) => {
 export const BoxInputs = () => {
     return (
         <Box display='flex' flexDirection='column'>
-            <TextField variant="filled" id="descricao" label="Descrição" ></TextField>
-            <TextField variant="filled" id="preco" label="Preço" ></TextField>
-            <TextField variant="filled" id="categoria" label="Categoria" ></TextField>
+            <TextField 
+                variant="filled" 
+                fullWidth
+                id="descricao" 
+                label="Descrição"
+                sx={{mb:'15px'}}></TextField>
+            <TextField 
+                variant="filled" 
+                fullWidth
+                type="number"
+                id="preco" 
+                label="Preço" 
+                sx={{mb:'15px'}}></TextField>
+            <TextField 
+                variant="filled" 
+                fullWidth
+                id="categoria" 
+                label="Categoria" 
+                sx={{mb:'15px'}}></TextField>
         </Box>
     )
 }

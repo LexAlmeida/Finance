@@ -14,8 +14,8 @@ export const Theme = createTheme({
             contrastText: '#ffffff'
         },
         background: {
-            default: '#202024',
-            paper: '#323238'
+            default: '#121214',
+            paper: '#202024'
         },
         text: {
             primary: '#c4c4cc',
@@ -27,8 +27,7 @@ export const Theme = createTheme({
             styleOverrides: {
                 root: {
                     "& .MuiFilledInput-root": {
-                        backgroundColor: '#121214',
-                        
+                        backgroundColor: '#121214'
                     }
                 }
             }
