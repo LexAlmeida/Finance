@@ -3,7 +3,14 @@ import { ButtonSearch } from "../Button/Button"
 
 export const Search = () => {
     return (
-        <Box sx={{display:'flex', marginTop:'30px', gap:'1rem'}}>
+        <Box sx={{
+            display:'flex', 
+            margin:'25px auto 0 auto', 
+            gap:'1%',
+            alignItems:'center',
+            justifyContent:'center',
+            width:'100%',
+            maxWidth:'1120px'}}>
             <TextField 
             variant="filled"
             id="buscar-transacao"

@@ -18,15 +18,11 @@ const IconMap: {[key: string]: React.ElementType} = {
 
 const MyCard = ({title, value, icon}: ICard) => {
     const IconComponent = IconMap[icon];
-    const theme = Theme;
     return (
-            <Box sx={{
-                display: 'flex', 
-                justifyContent: 'center', 
-                gap: 3, 
-                mt: 2}} 
-                color={theme.palette.text.primary}>
-                <Card sx={{width:390, borderRadius: "6px"}}>
+                <Card sx={{
+                    width:{xs: '100%', sm: '27.5rem'}, 
+                    borderRadius: "6px",
+                    mb: {xs:2, sm:0}}}>
                     <Grid container spacing={2} direction='column' p={4}>
                         <Box display={"flex"} justifyContent='space-between'>
                             <Typography variant="h6">{title}</Typography>
@@ -35,14 +31,13 @@ const MyCard = ({title, value, icon}: ICard) => {
                         <Typography variant="h4">{value}</Typography>
                     </Grid>
                 </Card>
-            </Box> 
     )
 }
 
 export const Cards = () => {
     return (
-        <Box sx={{width:'100%', margin:"-90px auto 0 auto",  maxWidth: "1120px"}}>
-            <Stack direction='row' spacing={2} justifyContent='center' gap={2}>
+        <Box sx={{width:'100%', margin:{xs:'20px auto 0 auto',sm:'-90px auto 0 auto'},  maxWidth: "1120px", padding:{xs:2,sm:0}}}>
+            <Stack direction='row' spacing={{xs:0,sm:2}} justifyContent='center' gap={2}>
                 <MyCard
                     title="Entrada"
                     value="4444,22"
