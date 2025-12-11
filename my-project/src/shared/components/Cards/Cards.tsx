@@ -41,7 +41,7 @@ const MyCard = ({title, value, icon}: ICard) => {
 
 export const Cards = () => {
     return (
-        <Box sx={{width:'100%'}}>
+        <Box sx={{width:'100%', marginTop:"-100px", maxWidth: "1120px"}}>
             <Stack direction='row' spacing={2} justifyContent='center'>
                 <MyCard
                     title="Entrada"

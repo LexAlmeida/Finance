@@ -7,7 +7,6 @@ import { Search } from "../../shared/components/Inputs/Search";
 export const Finance = () => {
     return (
         <BoxPrincipal>
-            
             <NewButton/>
             <Cards/>
             <Search/>

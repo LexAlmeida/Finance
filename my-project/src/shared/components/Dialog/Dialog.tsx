@@ -37,7 +37,7 @@ export const NovaTransacao = () => {
             slotProps={{
                 paper: {
                     sx: {
-                        backgroundColor: 'background.paper',
+                        backgroundColor: 'background.default',
                         borderRadius: '6px',
                         minWidth: '450px',
                         p: 2

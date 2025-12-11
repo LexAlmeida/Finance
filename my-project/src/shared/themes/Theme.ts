@@ -1,4 +1,5 @@
 import { createTheme } from "@mui/material";
+import '@mui/material/styles';
 
 export const Theme = createTheme({
     palette: {
@@ -14,8 +15,8 @@ export const Theme = createTheme({
             contrastText: '#ffffff'
         },
         background: {
-            default: '#121214',
-            paper: '#202024'
+            default: '#202024',
+            paper: '#323238'
         },
         text: {
             primary: '#c4c4cc',
