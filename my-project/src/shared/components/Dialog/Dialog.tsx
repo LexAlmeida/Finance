@@ -1,31 +1,81 @@
-import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp';
-import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown';
+
 import CloseIcon from '@mui/icons-material/Close';
-import { Box, Button, Dialog, DialogContent, DialogTitle, IconButton, Stack, type SxProps, type Theme } from "@mui/material"
-import { useState, type ReactNode } from "react";
+import { Button, Dialog, DialogContent, DialogTitle, IconButton, Stack } from "@mui/material"
+import { useEffect, useState } from "react";
 import { BoxInputs } from '../Box/Box';
 
-interface IBotoesDialog {
-    title: string,
-    onClick?: () => void,
-    sx?: SxProps<Theme>,
-    startIcon?: ReactNode;
+interface InputState {
+    descricao: string;
+    preco: string; 
+    categoria: string;
+}
+interface Transacao {
+    id: number;
+    descricao: string;
+    preco: number;
+    categoria: string;
+    data: string;
+} 
+type TipoTransacao = 'entrada' | 'saida';
+
+const getLocalStorageData = (key: string, defaultValue: Transacao[]): Transacao[] => {
+    const item = window.localStorage.getItem(key);
+    return item ? (JSON.parse(item) as Transacao[]): defaultValue;
 }
 
-const BotoesDialog = ({title, onClick, sx, startIcon}: IBotoesDialog) => {
-    return (
-        <Button onClick={onClick} sx={sx} startIcon={startIcon}>
-            {title}
-        </Button>
-    )
+const setLocalStorageData = (key: string, value: Transacao[]): void => {
+    window.localStorage.setItem(key, JSON.stringify(value));
 }
+
+
 
 export const NovaTransacao = () => {
     const [open, setOpen] = useState(false);
-    const [typeTransaction, setTypeTransaction] = useState<"entrada"|"saida">("entrada");
     const handleClickOpen = () => setOpen(true);
     const handleClickClose = () => setOpen(false);
+
+    const [saidas, setSaidas] = useState<Transacao[]>(() => getLocalStorageData('app-saidas',[]));
+    const [entradas, setEntradas] = useState<Transacao[]>(() => getLocalStorageData('app-saidas', []));
+
+    const [tipoSelecionado, setTipoSelecionado] = useState<TipoTransacao | null>(null);
     
+    useEffect(() => {
+        setLocalStorageData('app-saidas', saidas);
+    }, [saidas]);
+
+    useEffect(() => {
+        setLocalStorageData('app-entradas', entradas);
+    }, [entradas]);
+
+    const handleSave = (inputs: InputState): boolean => {
+        if(!tipoSelecionado){
+            alert('Por favor, selecione se é uma entrada ou saída antes de Cadastrar.');
+            return false;
+        }
+        if(!inputs.descricao||!inputs.preco||!inputs.categoria){
+            alert("Por favor, preencha todos os campos antes de salvar!");
+            return false;
+        }
+
+        const novaTransacao: Transacao = {
+            id: Date.now(),
+            descricao: inputs.descricao,
+            preco: parseFloat(inputs.preco),
+            categoria: inputs.categoria,
+            data: new Date().toLocaleDateString(),
+        };
+
+        if(tipoSelecionado === 'saida'){
+            setSaidas(prevSaidas => [...prevSaidas, novaTransacao]);
+            console.log('Saida registrada:', novaTransacao);
+        } else if (tipoSelecionado === 'entrada'){
+            setEntradas(prevEntradas => [...prevEntradas, novaTransacao]);
+            console.log('Entrada registrada:', novaTransacao);
+        }
+        setTipoSelecionado(null);
+        return true;
+    }
+
     return (
     <>
         <Button variant='contained' color='primary' onClick={handleClickOpen} sx={{
@@ -68,46 +118,8 @@ export const NovaTransacao = () => {
             </DialogTitle>  
             <DialogContent>
                 <Stack >
-                    <BoxInputs/>
-                    <Box display='grid' gridTemplateColumns="1fr 1fr" gap={2} mt={1} >
-                        <BotoesDialog 
-                            onClick={() => {setTypeTransaction('entrada')}}
-                            title="Entrada"
-                            sx={{
-                                bgcolor: typeTransaction === 'entrada' ? 'primary.dark' : '#29292e',
-                                color: typeTransaction === 'entrada' ? 'text.secondary' : 'text.primary',
-                                py: 2,
-                                borderRadius: '6px',
-                                textTransform: 'none',
-                                '&:hover':{
-                                    bgcolor: typeTransaction === 'entrada' ? 'primary.main' : 'background.paper'
-                                }
-                            }}
-                            startIcon={<ArrowCircleUpIcon sx={{color: typeTransaction === 'entrada' ? 'text.secondary' : 'primary.main'}}/>}
-                            />
-                        <BotoesDialog 
-                            onClick={() => {setTypeTransaction('saida')}}
-                            title="Saída"
-                            sx={{
-                                bgcolor: typeTransaction === 'saida' ? 'secondary.dark' : '#29292e',
-                                color: typeTransaction === 'saida' ? 'text.secondary' : 'text.primary',
-                                py: 2,
-                                borderRadius: '6px',
-                                textTransform: 'none',
-                                '&:hover':{
-                                    bgcolor: typeTransaction === 'saida' ? 'secondary.main' : 'background.paper'
-                                }
-                            }}
-                            startIcon={<ArrowCircleDownIcon sx={{color: typeTransaction === 'saida' ? 'text.secondary' : 'secondary.main'}}/>}
-                            />
-                    </Box>     
-                    <Button
-                        fullWidth
-                        variant='contained'
-                        color='primary'
-                        sx={{mt:2, py:1.5, fontWeight:'bold', borderRadius:'6px', textTransform:'none'}}   
-                    >Cadastrar</Button>
-                     
+                    <BoxInputs onSave={handleSave} tipoSelecionado={tipoSelecionado} setTipoSelecionado={setTipoSelecionado}/>
+                    
                 </Stack>
                 
             </DialogContent>

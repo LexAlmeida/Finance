@@ -3,14 +3,14 @@ import { ButtonSearch } from "../Button/Button"
 
 export const Search = () => {
     return (
-        <Box sx={{display:'flex'}}>
-        <TextField 
-        variant="filled"
-        id="buscar-transacao"
-        label="Buscar uma transação"
-        fullWidth
-        />
-        <ButtonSearch/>
+        <Box sx={{display:'flex', marginTop:'30px', gap:'1rem'}}>
+            <TextField 
+            variant="filled"
+            id="buscar-transacao"
+            label="Buscar uma transação"
+            sx={{flex:'1'}}
+            />
+            <ButtonSearch/>
         </Box>
     )
 }
