@@ -28,7 +28,9 @@ export const NovaTransacao = () => {
     
     return (
     <>
-        <Button variant='contained' color='primary' onClick={handleClickOpen}>
+        <Button variant='contained' color='primary' onClick={handleClickOpen} sx={{
+            padding:"15px"
+        }}>
             Nova transação
         </Button>
         <Dialog 
