@@ -1,7 +1,7 @@
 
 import CloseIcon from '@mui/icons-material/Close';
 import { Button, Dialog, DialogContent, DialogTitle, IconButton, Stack } from "@mui/material"
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { BoxInputs } from '../Box/BoxInputs';
 
 interface InputState {
@@ -17,6 +17,7 @@ interface Transacao {
     data: string;
 } 
 type TipoTransacao = 'entrada' | 'saida';
+type LocalStorageKey = 'app-entradas' | 'app-saidas';
 
 const getLocalStorageData = (key: string, defaultValue: Transacao[]): Transacao[] => {
     const item = window.localStorage.getItem(key);
@@ -29,13 +30,17 @@ const setLocalStorageData = (key: string, value: Transacao[]): void => {
 
 export const NovaTransacao = () => {
     const [open, setOpen] = useState(false);
-    const handleClickOpen = () => setOpen(true);
-    const handleClickClose = () => setOpen(false);
 
-    const [saidas, setSaidas] = useState<Transacao[]>(() => getLocalStorageData('app-saidas',[]));
-    const [entradas, setEntradas] = useState<Transacao[]>(() => getLocalStorageData('app-entradas', []));
+    const [saidas, setSaidas] = useState<Transacao[]>(() => (() => getLocalStorageData('app-saidas', []))());
+    const [entradas, setEntradas] = useState<Transacao[]>(() => (() => getLocalStorageData('app-entradas', []))());
 
     const [tipoSelecionado, setTipoSelecionado] = useState<TipoTransacao | null>(null);
+ 
+    const handleClickOpen = () => setOpen(true);
+    const handleClickClose = () => {
+        setOpen(false);
+        setTipoSelecionado(null);
+    };
     
     useEffect(() => {
         setLocalStorageData('app-saidas', saidas);
@@ -60,7 +65,7 @@ export const NovaTransacao = () => {
             descricao: inputs.descricao,
             preco: parseFloat(inputs.preco),
             categoria: inputs.categoria,
-            data: new Date().toLocaleDateString(),
+            data: new Date().toLocaleDateString('pt-BR'),
         };
 
         if(tipoSelecionado === 'saida'){
@@ -71,8 +76,10 @@ export const NovaTransacao = () => {
             console.log('Entrada registrada:', novaTransacao);
         }
         setTipoSelecionado(null);
+        handleClickClose();
+        window.dispatchEvent(new Event('storage'));
         return true;
-    }
+    };
 
     return (
     <>
