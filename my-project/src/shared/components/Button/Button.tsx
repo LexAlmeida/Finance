@@ -1,6 +1,6 @@
 import { Box, Button } from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
-import { NovaTransacao } from "../Dialog/Dialog";
+import { NovaTransacao } from "../Dialog/NovaTransacao";
 
 interface IButtonAction {
     tipoSelecionado: 'entrada'|'saida'|null;

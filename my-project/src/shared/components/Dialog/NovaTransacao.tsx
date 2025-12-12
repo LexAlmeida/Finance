@@ -2,7 +2,7 @@
 import CloseIcon from '@mui/icons-material/Close';
 import { Button, Dialog, DialogContent, DialogTitle, IconButton, Stack } from "@mui/material"
 import { useEffect, useState } from "react";
-import { BoxInputs } from '../Box/Box';
+import { BoxInputs } from '../Box/BoxInputs';
 
 interface InputState {
     descricao: string;
@@ -27,15 +27,13 @@ const setLocalStorageData = (key: string, value: Transacao[]): void => {
     window.localStorage.setItem(key, JSON.stringify(value));
 }
 
-
-
 export const NovaTransacao = () => {
     const [open, setOpen] = useState(false);
     const handleClickOpen = () => setOpen(true);
     const handleClickClose = () => setOpen(false);
 
     const [saidas, setSaidas] = useState<Transacao[]>(() => getLocalStorageData('app-saidas',[]));
-    const [entradas, setEntradas] = useState<Transacao[]>(() => getLocalStorageData('app-saidas', []));
+    const [entradas, setEntradas] = useState<Transacao[]>(() => getLocalStorageData('app-entradas', []));
 
     const [tipoSelecionado, setTipoSelecionado] = useState<TipoTransacao | null>(null);
     
@@ -88,12 +86,7 @@ export const NovaTransacao = () => {
             onClose={handleClickClose}
             slotProps={{
                 paper: {
-                    sx: {
-                        backgroundColor: 'background.default',
-                        borderRadius: '6px',
-                        minWidth: '450px',
-                        p: 2
-                    }
+                    sx: {backgroundColor: 'background.default', borderRadius: '6px', minWidth: '450px', p: 2}
                 }
             }}>
             <IconButton 
@@ -118,8 +111,10 @@ export const NovaTransacao = () => {
             </DialogTitle>  
             <DialogContent>
                 <Stack >
-                    <BoxInputs onSave={handleSave} tipoSelecionado={tipoSelecionado} setTipoSelecionado={setTipoSelecionado}/>
-                    
+                    <BoxInputs 
+                        onSave={handleSave} 
+                        tipoSelecionado={tipoSelecionado} 
+                        setTipoSelecionado={setTipoSelecionado}/>
                 </Stack>
                 
             </DialogContent>
