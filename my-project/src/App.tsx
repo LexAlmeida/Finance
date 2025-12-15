@@ -11,7 +11,6 @@ function App() {
       <BrowserRouter>
         <ThemeContext>
           <CSSBaseLine/>
-          <Header/>
           <AppRoutes/>
         </ThemeContext>
       </BrowserRouter>
