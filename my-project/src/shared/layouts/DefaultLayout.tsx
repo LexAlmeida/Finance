@@ -4,10 +4,10 @@ import { Header } from '../components/Header/Header';
 export const DefaultLayout = () => {
   return (
     <div>
-      <Header /> {/* O Header fica aqui */}
+      <Header /> 
       
       <main>
-        <Outlet /> {/* O 'Outlet' é onde o React vai encaixar a página filha (Home, etc) */}
+        <Outlet />
       </main>
     </div>
   );

@@ -3,10 +3,25 @@ import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import { Box, Card, Grid, Stack, Typography } from '@mui/material';
 
+// --- Interfaces para Props ---
+interface ResumoProps {
+    entradas: number;
+    saidas: number;
+    total: number;
+}
 interface ICard {
     title: string;
     value: string;
     icon: string;
+    isHighlight: boolean;
+}
+
+// --- Funções Auxiliares ---
+const formatarPreco = (preco: number): string => {
+    return new Intl.NumberFormat('pt-br', {
+        style:'currency',
+        currency: 'BRL'
+    }).format(preco)
 }
 
 const IconMap: {[key: string]: React.ElementType} = {
@@ -15,41 +30,71 @@ const IconMap: {[key: string]: React.ElementType} = {
     money: AttachMoneyIcon
 }
 
-const MyCard = ({title, value, icon}: ICard) => {
+// --- Sub-Componente de Card ---
+const MyCard = ({title, value, icon, isHighlight}: ICard) => {
     const IconComponent = IconMap[icon];
+    
+    // Define a cor do ícone com base no tema e destaque
+    const iconColor = isHighlight ? 'text.secondary' : (title === 'Entrada' ? 'primary.light' : 'secondary.main');
+    
+    // Define a cor do fundo com base no destaque
+    const bgColor = isHighlight ? 'primary.main' : 'background.default';
+
     return (
+        // Usamos o Paper para melhor controle de estilo do Material UI
         <Card sx={{
             width:{xs: '100%', sm: '27.5rem'}, 
             borderRadius: "6px",
-            mb: {xs:2, sm:0}}}>
-            <Grid container spacing={2} direction='column' p={4}>
-                <Box display={"flex"} justifyContent='space-between'>
-                    <Typography variant="h6">{title}</Typography>
-                    <IconComponent/>
-                </Box>
-                <Typography variant="h4">{value}</Typography>
-            </Grid>
+            mb: {xs:2, sm:0},
+            bgcolor: bgColor, // Fundo dinâmico
+            color: isHighlight ? 'contrastText' : 'text.secondary', 
+            p: 4
+        }}>
+            <Box display={"flex"} justifyContent='space-between'>
+                <Typography variant="h6">{title}</Typography>
+                <IconComponent sx={{ color: isHighlight ? 'contrastText' : iconColor }}/>
+            </Box>
+            <Typography 
+                variant="h4" 
+                fontWeight='bold'
+                sx={{ mt: 1, 
+                      color: isHighlight ? 'contrastText' : 
+                      (title === 'Entrada' ? 'primary.light' : 
+                       (title === 'Saída' ? 'secondary.main' : 'text.secondary'))
+                }}
+            >
+                {value}
+            </Typography>
         </Card>
     )
 }
 
-export const Cards = () => {
+// --- Componente Principal Cards ---
+export const Cards = ({ resumo }: { resumo: ResumoProps }) => {
+    
     return (
-        <Box sx={{width:'100%', margin:{xs:'20px auto 0 auto',sm:'-90px auto 0 auto'},  maxWidth: "1120px", padding:{xs:2,sm:0}}}>
-            <Stack direction='row' spacing={{xs:0,sm:2}} justifyContent='center' gap={2}>
+            <Stack direction='row' spacing={{xs:0,sm:2}} justifyContent='center' gap={2} sx={{
+                // Ajuste de margem (para simular o layout da imagem)
+                mt: { xs: 0, sm: -5 } // Mantemos um pequeno ajuste vertical se necessário
+            }}>
                 <MyCard
                     title="Entrada"
-                    value="4444,22"
-                    icon="arrowUp"/>
+                    value={formatarPreco(resumo.entradas)}
+                    icon="arrowUp"
+                    isHighlight={false}
+                />
                 <MyCard
                     title="Saída"
-                    value="4444,22"
-                    icon="arrowDown"/>
+                    value={formatarPreco(resumo.saidas)}
+                    icon="arrowDown"
+                    isHighlight={false}
+                />
                 <MyCard
                     title="Total"
-                    value="4444,22"
-                    icon="money"/>
+                    value={formatarPreco(resumo.total)}
+                    icon="money"
+                    isHighlight={true} // Este card é o verde de destaque
+                />
             </Stack>
-        </Box>
     )
 }

@@ -1,13 +1,39 @@
 import { Box, Button, Paper, Stack, TextField, Typography, InputAdornment } from "@mui/material";
-import SavingsIcon from '@mui/icons-material/Savings'; // Ícone de porquinho ou use o seu logo
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import SavingsIcon from '@mui/icons-material/Savings';
 import EmailIcon from '@mui/icons-material/Email';
 import LockIcon from '@mui/icons-material/Lock';
 
 export const Login = () => {
+    const navigate = useNavigate();
+
+    const [loginInput, setLoginInput] = useState('');
+    const [senhaInput, setSenhaInput] = useState('');
+    
+    const [erro, setErro] = useState(false);
 
     const handleLogin = () => {
-        // Lógica futura de login aqui
-        console.log("Tentando logar...");
+        const loginLimpo = loginInput.trim().toLowerCase(); 
+        const senhaLimpa = senhaInput.trim(); 
+
+        console.log("Digitado:", loginLimpo, senhaLimpa);
+        console.log("Esperado:", "teste", "senha");
+
+        if (loginLimpo === 'teste' && senhaLimpa === 'senha') {
+            setErro(false);
+            
+            localStorage.setItem('usuario_logado', JSON.stringify({ 
+                id: 2, 
+                nome: 'teste', 
+                token: 'token-falso-123' 
+            }));
+
+            navigate('/pagina-inicial');
+        } else {
+            setErro(true);
+            alert(`Erro! Você digitou: "${loginLimpo}" e senha "${senhaLimpa}". O esperado é "teste" e "senha".`);
+        }
     };
 
     return (
@@ -17,7 +43,7 @@ export const Login = () => {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                backgroundColor: '#121214', // Fundo bem escuro (igual ao fundo da sua tela)
+                backgroundColor: '#121214', 
                 padding: 2
             }}
         >
@@ -27,16 +53,15 @@ export const Login = () => {
                     p: 4,
                     width: '100%',
                     maxWidth: 400,
-                    backgroundColor: '#202024', // Cinza do card
+                    backgroundColor: 'background.default', 
                     color: '#e1e1e6',
                     borderRadius: '8px',
-                    border: '1px solid #323238' // Borda sutil
+                    border: '1px solid #323238' 
                 }}
             >
-                {/* Cabeçalho do Card */}
                 <Stack direction="column" alignItems="center" spacing={2} sx={{ mb: 4 }}>
                     <Stack direction="row" alignItems="center" spacing={1}>
-                        <SavingsIcon sx={{ color: '#00B37E', fontSize: 40 }} />
+                        <SavingsIcon sx={{ color: 'primary.main', fontSize: 40 }} />
                         <Typography variant="h4" fontWeight="bold">
                             Finance
                         </Typography>
@@ -53,19 +78,24 @@ export const Login = () => {
                         label="E-mail"
                         variant="outlined"
                         placeholder="exemplo@finance.com"
+                        value={loginInput} 
+                        onChange={(e) => setLoginInput(e.target.value)} 
+                        
+                        error={erro} 
+                        
                         InputLabelProps={{ style: { color: '#7c7c8a' } }}
                         InputProps={{
                             startAdornment: (
                                 <InputAdornment position="start">
-                                    <EmailIcon sx={{ color: '#00B37E' }} />
+                                    <EmailIcon sx={{ color: erro ? 'secondary.main' : '#00B37E' }} /> 
                                 </InputAdornment>
                             ),
                             sx: {
                                 color: '#e1e1e6',
                                 backgroundColor: '#121214',
                                 '& .MuiOutlinedInput-notchedOutline': { borderColor: '#323238' },
-                                '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#00B37E' },
-                                '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: '#00B37E' },
+                                '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: 'primary.main' },
+                                '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: 'primary.main' },
                             }
                         }}
                     />
@@ -76,19 +106,25 @@ export const Login = () => {
                         type="password"
                         variant="outlined"
                         placeholder="********"
+                        value={senhaInput} 
+                        onChange={(e) => setSenhaInput(e.target.value)} 
+                        
+                        error={erro} 
+                        helperText={erro ? "Usuário ou senha inválidos." : ""} 
+                        
                         InputLabelProps={{ style: { color: '#7c7c8a' } }}
                         InputProps={{
                             startAdornment: (
                                 <InputAdornment position="start">
-                                    <LockIcon sx={{ color: '#00B37E' }} />
+                                    <LockIcon sx={{ color: erro ? 'secondary.main' : 'primary.main' }} />
                                 </InputAdornment>
                             ),
                             sx: {
                                 color: '#e1e1e6',
                                 backgroundColor: '#121214',
                                 '& .MuiOutlinedInput-notchedOutline': { borderColor: '#323238' },
-                                '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#00B37E' },
-                                '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: '#00B37E' },
+                                '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: 'primary.main' },
+                                '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: 'primary.main' },
                             }
                         }}
                     />
@@ -98,23 +134,21 @@ export const Login = () => {
                         fullWidth
                         onClick={handleLogin}
                         sx={{
-                            backgroundColor: '#00875F', // Verde do botão "Nova Transação"
+                            backgroundColor: 'primary.light',
                             color: 'white',
                             fontWeight: 'bold',
                             padding: '12px',
                             '&:hover': {
-                                backgroundColor: '#015F43',
+                                backgroundColor: 'primary.dark',
                             }
                         }}
                     >
                         ENTRAR
                     </Button>
                 </Stack>
-
-                {/* Rodapé do Card */}
                 <Stack direction="row" justifyContent="center" sx={{ mt: 3 }}>
                     <Typography variant="body2" sx={{ color: '#7c7c8a' }}>
-                        Não tem uma conta? <span style={{ color: '#00B37E', cursor: 'pointer', fontWeight: 'bold' }}>Registre-se</span>
+                        Não tem uma conta? <span style={{ color: 'primary.main', cursor: 'pointer', fontWeight: 'bold' }}>Registre-se</span>
                     </Typography>
                 </Stack>
             </Paper>

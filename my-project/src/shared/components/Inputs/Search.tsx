@@ -1,23 +1,31 @@
-import { Box, TextField } from "@mui/material"
-import { ButtonSearch } from "../Button/Button"
+import { Box, TextField, Button } from "@mui/material"
+import { ButtonSearch } from "../Button/Button" // Seu componente de botão
 
-export const Search = () => {
+interface SearchProps {
+    filtro: string;
+    setFiltro: React.Dispatch<React.SetStateAction<string>>;
+}
+
+export const Search = ({ filtro, setFiltro }: SearchProps) => {
     return (
         <Box sx={{
             display:'flex', 
-            margin:'25px auto 0 auto', 
+            margin:'25px 0 0 0', 
             gap:'1%',
             alignItems:'center',
             justifyContent:'center',
             width:'100%',
-            maxWidth:'1120px'}}>
+        }}>
             <TextField 
-            variant="filled"
-            id="buscar-transacao"
-            label="Buscar uma transação"
-            sx={{flex:'1'}}
+                variant="filled"
+                id="buscar-transacao"
+                label="Buscar uma transação"
+                value={filtro} // <--- Agora controlado pelo estado do Finance
+                onChange={(e) => setFiltro(e.target.value)} // <--- Atualiza o estado do Finance
+                sx={{flex:'1'}}
             />
-            <ButtonSearch/>
+            {/* O ButtonSearch pode ser alterado para ser um Button normal com type="submit" */}
+            <ButtonSearch/> 
         </Box>
     )
 }

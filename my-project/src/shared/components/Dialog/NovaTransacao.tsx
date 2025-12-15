@@ -77,7 +77,7 @@ export const NovaTransacao = () => {
         }
         setTipoSelecionado(null);
         handleClickClose();
-        window.dispatchEvent(new Event('storage'));
+        window.dispatchEvent(new Event('localStorageUpdate'));
         return true;
     };
 
