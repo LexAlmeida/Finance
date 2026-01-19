@@ -1,14 +1,11 @@
 import { useEffect, useState, useMemo, useCallback } from "react";
-import { Stack, Typography } from "@mui/material";
 // Importações de componentes
 import { Cards } from "../shared/components/Cards/Cards";
 import { BoxPrincipal } from "../shared/components/Box/Box";
 import { Search } from "../shared/components/Inputs/Search";
 import { TabelaTransacoes } from "../shared/components/Tabela/Tabela";
 // Importações de utilitários (para usar no componente)
-import { ITransacao } from "../shared/components/Tabela/Tabela"; // Reutilizando a interface
-import { NovaTransacao } from "../shared/components/Dialog/NovaTransacao";
-import SavingsIcon from '@mui/icons-material/Savings';
+import { type ITransacao } from "../shared/components/Tabela/Tabela"; // Reutilizando a interface
 
 // Funções utilitárias (Replicando o que você tem em Tabela/NovaTransacao)
 const getLocalStorageData = (key: string): ITransacao[] => {

@@ -1,7 +1,7 @@
 import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp';
 import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
-import { Box, Card, Grid, Stack, Typography } from '@mui/material';
+import { Box, Card, Stack, Typography } from '@mui/material';
 
 // --- Interfaces para Props ---
 interface ResumoProps {

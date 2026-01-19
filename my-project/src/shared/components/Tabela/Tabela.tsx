@@ -1,5 +1,4 @@
 import { Paper, Table, TableBody, TableCell, TableContainer, TableRow } from "@mui/material"
-import { useEffect, useState } from "react";
 
 // Interface (Mantenha esta)
 export interface ITransacao { 
