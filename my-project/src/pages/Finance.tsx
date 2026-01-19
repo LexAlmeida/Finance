@@ -1,13 +1,13 @@
 import { useEffect, useState, useMemo, useCallback } from "react";
 import { Stack, Typography } from "@mui/material";
 // Importações de componentes
-import { Cards } from "../../shared/components/Cards/Cards";
-import { BoxPrincipal } from "../../shared/components/Box/Box";
-import { Search } from "../../shared/components/Inputs/Search";
-import { TabelaTransacoes } from "../../shared/components/Tabela/Tabela";
+import { Cards } from "../shared/components/Cards/Cards";
+import { BoxPrincipal } from "../shared/components/Box/Box";
+import { Search } from "../shared/components/Inputs/Search";
+import { TabelaTransacoes } from "../shared/components/Tabela/Tabela";
 // Importações de utilitários (para usar no componente)
-import { ITransacao } from "../../shared/components/Tabela/Tabela"; // Reutilizando a interface
-import { NovaTransacao } from "../../shared/components/Dialog/NovaTransacao";
+import { ITransacao } from "../shared/components/Tabela/Tabela"; // Reutilizando a interface
+import { NovaTransacao } from "../shared/components/Dialog/NovaTransacao";
 import SavingsIcon from '@mui/icons-material/Savings';
 
 // Funções utilitárias (Replicando o que você tem em Tabela/NovaTransacao)
@@ -38,9 +38,7 @@ export const Finance = () => {
         setTransacoesCompletas(todasTransacoes);
     }, []);
 
-    // ----------------------------------------------------
     // EFEITO: Escuta o evento de atualização do Dialog
-    // ----------------------------------------------------
     useEffect(() => {
         carregarTransacoes(); // Carrega na montagem inicial
         
@@ -55,9 +53,7 @@ export const Finance = () => {
     }, [carregarTransacoes]);
 
 
-    // ----------------------------------------------------
     // CÁLCULO: Cards de Resumo (Entrada, Saída, Total)
-    // ----------------------------------------------------
     const resumo = useMemo(() => {
         const entradas = transacoesCompletas
             .filter(t => t.preco > 0)
@@ -72,9 +68,7 @@ export const Finance = () => {
         return { entradas, saidas, total };
     }, [transacoesCompletas]);
 
-    // ----------------------------------------------------
     // CÁLCULO: Filtro de Busca
-    // ----------------------------------------------------
     const transacoesFiltradas = useMemo(() => {
         if (!filtro) return transacoesCompletas;
         
