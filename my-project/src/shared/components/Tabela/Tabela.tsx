@@ -1,4 +1,5 @@
-import { Paper, Table, TableBody, TableCell, TableContainer, TableRow } from "@mui/material"
+import { Paper, Table, TableBody, TableCell, TableContainer, TableRow, IconButton, colors } from "@mui/material";
+import DeleteIcon from '@mui/icons-material/Delete';
 
 // Interface 
 export interface ITransacao { 
@@ -6,12 +7,14 @@ export interface ITransacao {
     descricao:string;
     preco:number; // Já é negativo para Saídas
     categoria:string;
+    tipo:'entrada' | 'saida';
     data:string;
 }
 
 // Interface de Propriedades - Recebe a lista já filtrada do Finance
 interface TabelaProps {
     transacoes: ITransacao[];
+    onDelete?: (id: number) => void;
 }
 
 const formatarPreco = (preco: number): string => {
@@ -22,7 +25,7 @@ const formatarPreco = (preco: number): string => {
     }).format(Math.abs(preco))
 }
 
-export const TabelaTransacoes = ({ transacoes }: TabelaProps) => {
+export const TabelaTransacoes = ({ transacoes, onDelete }: TabelaProps) => {
     // Definir o tipo com base no sinal do preço
     const getTipo = (preco: number) => preco > 0 ? 'entrada' : 'saida';
 
@@ -43,6 +46,7 @@ export const TabelaTransacoes = ({ transacoes }: TabelaProps) => {
                                     '&:hover': { bgcolor: 'background.paper' }
                                 }}
                             >
+                                {/*descrição*/}
                                 <TableCell 
                                     component='th' 
                                     scope="row"
@@ -53,6 +57,7 @@ export const TabelaTransacoes = ({ transacoes }: TabelaProps) => {
                                 >
                                     {transacao.descricao}
                                 </TableCell>
+                                {/*preco*/}
                                 <TableCell sx={{
                                     color: tipo === 'entrada' ? 'primary.light' : 'secondary.main',
                                     fontWeight:'bold',
@@ -61,24 +66,35 @@ export const TabelaTransacoes = ({ transacoes }: TabelaProps) => {
                                     {tipo === 'saida' ? '- ' : ''} 
                                     {formatarPreco(transacao.preco)}
                                 </TableCell>
+                                {/*categoria*/}
                                 <TableCell sx={{
                                     color: 'text.primary', 
                                     borderBottom: `1px solid ${borderColor}`,
                                 }}>
                                     {transacao.categoria}
-                                </TableCell>       
+                                </TableCell> 
+                                {/*data*/}      
                                 <TableCell sx={{
                                     color: 'text.primary', 
                                     borderBottom: `1px solid ${borderColor}`,
                                 }}>
                                     {transacao.data}
-                                </TableCell>                       
+                                </TableCell>  
+                                <TableCell align="right" sx={{
+                                    borderBottom:`1px solid ${borderColor}`,
+                                }}>
+                                    <IconButton 
+                                        onClick={() => onDelete?.(transacao.id)}
+                                        sx={{color:'#7c7c8a', "&:hover": {color: '#8a2834'}}}>
+                                        <DeleteIcon fontSize="small" />
+                                    </IconButton>
+                                </TableCell>                     
                             </TableRow>
                         );
                     })}
                     {transacoes.length === 0 && (
                         <TableRow>
-                             <TableCell colSpan={4} align="center" sx={{ color: 'text.primary' }}>
+                             <TableCell colSpan={5} align="center" sx={{ color: 'text.primary' }}>
                                 Nenhuma transação encontrada.
                             </TableCell>
                         </TableRow>

@@ -2,8 +2,8 @@ import {api} from "../api";
 import { type Transaction } from "../get/transactions";
 
 export interface NewTransaction {
-  descricao: string;
-  preco: number;
+  nome: string;
+  valor: number;
   categoria: string;
   tipo: 'entrada' | 'saida';
 }

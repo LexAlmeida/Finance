@@ -1,86 +1,55 @@
 
 import CloseIcon from '@mui/icons-material/Close';
 import { Button, Dialog, DialogContent, DialogTitle, IconButton, Stack } from "@mui/material";
-import {  useEffect, useState } from "react";
+import { useState } from "react";
 import { BoxInputs } from '../Box/BoxInputs';
+import { createTransaction } from '../../services/post/transactions';
 
 interface InputState {
-    descricao: string;
-    preco: string; 
+    nome: string;
+    valor: string; 
     categoria: string;
 }
-interface Transacao {
-    id: number;
-    descricao: string;
-    preco: number;
-    categoria: string;
-    data: string;
-} 
-type TipoTransacao = 'entrada' | 'saida';
-type LocalStorageKey = 'app-entradas' | 'app-saidas';
-
-const getLocalStorageData = (key: string, defaultValue: Transacao[]): Transacao[] => {
-    const item = window.localStorage.getItem(key);
-    return item ? (JSON.parse(item) as Transacao[]): defaultValue;
+interface NovaTransacaoProps {
+    onSuccess: () => void; //recarrega a lista depois do post
 }
 
-const setLocalStorageData = (key: string, value: Transacao[]): void => {
-    window.localStorage.setItem(key, JSON.stringify(value));
-}
-
-export const NovaTransacao = () => {
+export const NovaTransacao = ({onSuccess}: NovaTransacaoProps) => {
     const [open, setOpen] = useState(false);
-
-    const [saidas, setSaidas] = useState<Transacao[]>(() => (() => getLocalStorageData('app-saidas', []))());
-    const [entradas, setEntradas] = useState<Transacao[]>(() => (() => getLocalStorageData('app-entradas', []))());
-
-    const [tipoSelecionado, setTipoSelecionado] = useState<TipoTransacao | null>(null);
+    const [tipoSelecionado, setTipoSelecionado] = useState<'entrada' | 'saida' | null>(null);
  
     const handleClickOpen = () => setOpen(true);
     const handleClickClose = () => {
         setOpen(false);
         setTipoSelecionado(null);
     };
-    
-    useEffect(() => {
-        setLocalStorageData('app-saidas', saidas);
-    }, [saidas]);
 
-    useEffect(() => {
-        setLocalStorageData('app-entradas', entradas);
-    }, [entradas]);
-
-    const handleSave = (inputs: InputState): boolean => {
+    const handleSave = async (inputs: InputState): Promise<boolean> => {
         if(!tipoSelecionado){
-            alert('Por favor, selecione se é uma entrada ou saída antes de Cadastrar.');
+            alert("Por favor, selecione o tipo de transação (Entrada ou Saída).");
             return false;
         }
-        if(!inputs.descricao||!inputs.preco||!inputs.categoria){
-            alert("Por favor, preencha todos os campos antes de salvar!");
+        if(!inputs.nome || !inputs.valor || !inputs.categoria){
+            alert("Por favor, preencha todos os campos.");
             return false;
         }
+        try {
+            await createTransaction({
+                nome: inputs.nome,
+                valor: Number(inputs.valor),
+                categoria: inputs.categoria,
+                tipo: tipoSelecionado,
+            });
 
-        const novaTransacao: Transacao = {
-            id: Date.now(),
-            descricao: inputs.descricao,
-            preco: parseFloat(inputs.preco),
-            categoria: inputs.categoria,
-            data: new Date().toLocaleDateString('pt-BR'),
-        };
-
-        if(tipoSelecionado === 'saida'){
-            setSaidas(prevSaidas => [...prevSaidas, novaTransacao]);
-            console.log('Saida registrada:', novaTransacao);
-        } else if (tipoSelecionado === 'entrada'){
-            setEntradas(prevEntradas => [...prevEntradas, novaTransacao]);
-            console.log('Entrada registrada:', novaTransacao);
+            onSuccess(); // Recarrega a lista de transações no componente pai
+            handleClickClose();
+            return true;
+        } catch (error) {
+            console.error("Erro ao salvar a transação:", error);
+            alert("Erro ao salvar no servidor.");
+            return false;
         }
-        setTipoSelecionado(null);
-        handleClickClose();
-        window.dispatchEvent(new Event('localStorageUpdate'));
-        return true;
     };
-
     return (
     <>
         <Button variant='contained' color='primary' onClick={handleClickOpen} sx={{

@@ -7,6 +7,7 @@ import { TabelaTransacoes } from "../shared/components/Tabela/Tabela";
 // Importações de utilitários (para usar no componente)
 import { type ITransacao } from "../shared/components/Tabela/Tabela"; // Reutilizando a interface
 import { getTransactions } from "../shared/services/get/transactions";
+import { deleteTransaction } from "../shared/services/delete/transactions";
 
 export const Finance = () => {
     const [transacoesCompletas, setTransacoesCompletas] = useState<ITransacao[]>([]);
@@ -28,6 +29,18 @@ export const Finance = () => {
         }
     }, [])
 
+    //Função para deletar transação
+    const handleDeleteTransacao = async (id: number) => {
+        if(window.confirm("Tem certeza que deseja deletar esta transação?")){
+            try {
+                await deleteTransaction(id);
+                await carregarTransacoes(); // Recarrega as transacoes depois dda exclusão
+            } catch (error) {
+                alert("Erro ao deletar a transação.");
+            }
+        }
+    }
+
     // effect: Escuta o evento de atualização do Dialog
     useEffect(() => {
         carregarTransacoes(); // Carrega na montagem inicial
@@ -36,15 +49,14 @@ export const Finance = () => {
     // calculo: Cards de Resumo (Entrada, Saída, Total)
     const resumo = useMemo(() => {
         const entradas = transacoesCompletas
-            .filter(t => t.preco > 0)
+            .filter(t => t.tipo === 'entrada')
             .reduce((acc, t) => acc + t.preco, 0);
 
-        const saidas = transacoesCompletas
-            .filter(t => t.preco < 0)
-            .reduce((acc, t) => acc + Math.abs(t.preco), 0); // Math.abs para ter o valor positivo da Saída
+        const saidas = transacoesCompletas  
+            .filter(t => t.tipo === 'saida')
+            .reduce((acc, t) => acc + t.preco, 0);
 
         const total = entradas - saidas;
-
         return { entradas, saidas, total };
     }, [transacoesCompletas]);
 
@@ -72,7 +84,9 @@ export const Finance = () => {
             <Search filtro={filtro} setFiltro={setFiltro} />
 
             {/* 3. Tabela (Recebe a lista de transações FILTRADAS) */}
-            <TabelaTransacoes transacoes={transacoesFiltradas} />
+            <TabelaTransacoes 
+                transacoes={transacoesFiltradas} 
+                onDelete={handleDeleteTransacao} />
             
         </BoxPrincipal>     
     )

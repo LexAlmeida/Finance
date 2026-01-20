@@ -10,6 +10,6 @@ export interface Transaction {
 }
 
 export const getTransactions = async (): Promise<Transaction[]> => {
-  const response = await api.get<Transaction[]>('/api/transactions');
+  const response = await api.get<Transaction[]>('/api/transacoes');
   return response.data;
 }
