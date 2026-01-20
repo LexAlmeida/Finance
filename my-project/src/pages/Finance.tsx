@@ -49,7 +49,6 @@ export const Finance = () => {
 
     }, [carregarTransacoes]);
 
-
     // calculo: Cards de Resumo (Entrada, Saída, Total)
     const resumo = useMemo(() => {
         const entradas = transacoesCompletas
