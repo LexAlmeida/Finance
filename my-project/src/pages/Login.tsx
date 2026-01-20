@@ -23,13 +23,19 @@ export const Login = () => {
 
         try{
             setErro(false);
-            const data = await loginService(loginLimpo, senhaLimpa);
-            localStorage.setItem('usuario-logado',JSON.stringify(data));
+
+            const data = await loginService(loginInput, senhaInput);
+
+            localStorage.setItem('usuario-logado',JSON.stringify({
+                token: data.token,
+                nome: data.usuario.login,
+                id: data.usuario.id
+            }));
+
             navigate('/pagina-inicial');
         } catch (error: any) {
             setErro(true);
-            console.error("Erro no login:", error);
-            const mensagemErro = error.response?.data?.mensagem || "Usuário ou senha inválidos.";
+            const mensagemErro = error.response?.data?.erro || "Erro ao conectar.";
             alert(mensagemErro);
         }
     };

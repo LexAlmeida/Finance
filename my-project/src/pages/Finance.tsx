@@ -6,47 +6,31 @@ import { Search } from "../shared/components/Inputs/Search";
 import { TabelaTransacoes } from "../shared/components/Tabela/Tabela";
 // Importações de utilitários (para usar no componente)
 import { type ITransacao } from "../shared/components/Tabela/Tabela"; // Reutilizando a interface
-
-// Funções utilitárias (Replicando o que você tem em Tabela/NovaTransacao)
-const getLocalStorageData = (key: string): ITransacao[] => {
-    const item = window.localStorage.getItem(key);
-    return item ? JSON.parse(item) as ITransacao[] : [];
-}
+import { getTransactions } from "../shared/services/get/transactions";
 
 export const Finance = () => {
     const [transacoesCompletas, setTransacoesCompletas] = useState<ITransacao[]>([]);
     const [filtro, setFiltro] = useState(''); // Estado para o campo de busca
+    const [carregando, setCarregando] = useState(true);
 
-    // Função que busca todos os dados do LocalStorage e os une
-    const carregarTransacoes = useCallback(() => {
-        const entradas = getLocalStorageData('app-entradas');
-        const saidas = getLocalStorageData('app-saidas');
+    // Função que busca dados da api
+    const carregarTransacoes = useCallback(async () => {
+        try{
+            setCarregando(true);
+            const dados = await getTransactions();
+            setTransacoesCompletas(dados.sort((a,b) => b.id - a.id));
 
-        // Crucial: Mapear saídas para ter preço negativo para o cálculo do TOTAL
-        const saidasComSinal = saidas.map(t => ({ 
-            ...t, 
-            // Garante que o preco tenha sinal negativo
-            preco: -Math.abs(t.preco) 
-        }));
-        
-        // Unir e ordenar pela data/ID (mais recentes primeiro)
-        const todasTransacoes = [...entradas, ...saidasComSinal].sort((a, b) => b.id - a.id); 
-
-        setTransacoesCompletas(todasTransacoes);
-    }, []);
+        }catch(error){
+            console.error("Erro ao carregar transações:", error);
+            alert("Erro ao conectar com o servidor de finanças.")
+        } finally {
+            setCarregando(false);
+        }
+    }, [])
 
     // effect: Escuta o evento de atualização do Dialog
     useEffect(() => {
         carregarTransacoes(); // Carrega na montagem inicial
-        
-        const handleStorageUpdate = () => {
-            carregarTransacoes(); // Recarrega os dados quando o evento é disparado
-        };
-
-        // Escuta o evento que o NovaTransacao dispara
-        window.addEventListener('localStorageUpdate', handleStorageUpdate);
-        return () => window.removeEventListener('localStorageUpdate', handleStorageUpdate);
-
     }, [carregarTransacoes]);
 
     // calculo: Cards de Resumo (Entrada, Saída, Total)
