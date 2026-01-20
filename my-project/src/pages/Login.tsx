@@ -4,6 +4,7 @@ import { useState } from "react";
 import SavingsIcon from '@mui/icons-material/Savings';
 import EmailIcon from '@mui/icons-material/Email';
 import LockIcon from '@mui/icons-material/Lock';
+import { loginService } from "../shared/services/post/auth";
 
 export const Login = () => {
     const navigate = useNavigate();
@@ -13,26 +14,23 @@ export const Login = () => {
     
     const [erro, setErro] = useState(false);
 
-    const handleLogin = () => {
+    const handleLogin = async () => {
         const loginLimpo = loginInput.trim().toLowerCase(); 
         const senhaLimpa = senhaInput.trim(); 
 
         console.log("Digitado:", loginLimpo, senhaLimpa);
         console.log("Esperado:", "teste", "senha");
 
-        if (loginLimpo === 'teste' && senhaLimpa === 'senha') {
+        try{
             setErro(false);
-            
-            localStorage.setItem('usuario_logado', JSON.stringify({ 
-                id: 2, 
-                nome: 'teste', 
-                token: 'token-falso-123' 
-            }));
-
+            const data = await loginService(loginLimpo, senhaLimpa);
+            localStorage.setItem('usuario-logado',JSON.stringify(data));
             navigate('/pagina-inicial');
-        } else {
+        } catch (error: any) {
             setErro(true);
-            alert(`Erro! Você digitou: "${loginLimpo}" e senha "${senhaLimpa}". O esperado é "teste" e "senha".`);
+            console.error("Erro no login:", error);
+            const mensagemErro = error.response?.data?.mensagem || "Usuário ou senha inválidos.";
+            alert(mensagemErro);
         }
     };
 
