@@ -1,41 +1,39 @@
-import { Box, Button, Paper, Stack, TextField, Typography, InputAdornment, Link } from "@mui/material";
+import { Box, Button, Link, Paper, Stack, TextField, Typography, InputAdornment } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import SavingsIcon from '@mui/icons-material/Savings';
 import EmailIcon from '@mui/icons-material/Email';
 import LockIcon from '@mui/icons-material/Lock';
-import { loginService } from "../shared/services/post/auth";
+import { cadastrarUsuario } from "../shared/services/post/users";
 
-export const Login = () => {
+
+export const Register = () => {
     const navigate = useNavigate();
 
     const [loginInput, setLoginInput] = useState('');
     const [senhaInput, setSenhaInput] = useState('');
-    
     const [erro, setErro] = useState(false);
 
-    const handleLogin = async () => {
-        const loginLimpo = loginInput.trim().toLowerCase(); 
+    const handleRegister = async () => {
+        const loginLimpo = loginInput.trim()
         const senhaLimpa = senhaInput.trim(); 
 
-        console.log("Digitado:", loginLimpo, senhaLimpa);
-        console.log("Esperado:", "teste", "senha");
+        if(!loginLimpo || !senhaLimpa){
+          alert("Por favor, preencha todos os campos.");
+          return;
+        }
 
         try{
             setErro(false);
 
-            const data = await loginService(loginInput, senhaInput);
+            await cadastrarUsuario(loginLimpo, senhaLimpa);
 
-            localStorage.setItem('usuario-logado',JSON.stringify({
-                token: data.token,
-                nome: data.usuario.login,
-                id: data.usuario.id
-            }));
+            alert("Conta criada com sucesso! Faça login para continuar.");
 
-            navigate('/pagina-inicial');
+            navigate('/login');
         } catch (error: any) {
             setErro(true);
-            const mensagemErro = error.response?.data?.erro || "Erro ao conectar.";
+            const mensagemErro = error.response?.data?.erro || "Erro ao criar conta.";
             alert(mensagemErro);
         }
     };
@@ -67,11 +65,11 @@ export const Login = () => {
                     <Stack direction="row" alignItems="center" spacing={1}>
                         <SavingsIcon sx={{ color: 'primary.main', fontSize: 40 }} />
                         <Typography variant="h4" fontWeight="bold">
-                            Finance
+                            Criar Conta
                         </Typography>
                     </Stack>
                     <Typography variant="body2" color="text.secondary" sx={{ color: '#7c7c8a' }}>
-                        Faça login para acessar suas contas
+                        Cadastre-se para gerenciar suas finanças
                     </Typography>
                 </Stack>
 
@@ -79,9 +77,9 @@ export const Login = () => {
                 <Stack spacing={3}>
                     <TextField
                         fullWidth
-                        label="E-mail"
+                        label="Usuário"
                         variant="outlined"
-                        placeholder="exemplo@finance.com"
+                        placeholder="Escolha um nome de usuário"
                         value={loginInput} 
                         onChange={(e) => setLoginInput(e.target.value)} 
                         
@@ -109,12 +107,12 @@ export const Login = () => {
                         label="Senha"
                         type="password"
                         variant="outlined"
-                        placeholder="********"
+                        placeholder= "Crie uma senha segura"
                         value={senhaInput} 
                         onChange={(e) => setSenhaInput(e.target.value)} 
                         
                         error={erro} 
-                        helperText={erro ? "Usuário ou senha inválidos." : ""} 
+                        helperText={erro ? "Não foi possível realizar o cadastro." : ""} 
                         
                         InputLabelProps={{ style: { color: '#7c7c8a' } }}
                         InputProps={{
@@ -136,7 +134,7 @@ export const Login = () => {
                     <Button
                         variant="contained"
                         fullWidth
-                        onClick={handleLogin}
+                        onClick={handleRegister}
                         sx={{
                             backgroundColor: 'primary.light',
                             color: 'white',
@@ -147,12 +145,13 @@ export const Login = () => {
                             }
                         }}
                     >
-                        ENTRAR
+                        CADASTRAR
                     </Button>
                 </Stack>
+
                 <Stack direction="row" justifyContent="center" sx={{ mt: 3 }}>
                     <Typography variant="body2" sx={{ color: '#7c7c8a' }}>
-                        Não tem uma conta? <Link href="/register" underline='hover' style={{ color: 'primary.main', cursor: 'pointer', fontWeight: 'bold' }}>Registre-se</Link>
+                        Já tem uma conta? <Link href="/login" underline="hover" style={{ color: 'primary.main', cursor: 'pointer', fontWeight: 'bold' }}>Fazer Login</Link>
                     </Typography>
                 </Stack>
             </Paper>
