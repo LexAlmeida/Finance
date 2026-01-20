@@ -1,7 +1,7 @@
 
 import CloseIcon from '@mui/icons-material/Close';
 import { Button, Dialog, DialogContent, DialogTitle, IconButton, Stack } from "@mui/material"
-import { useCallback, useEffect, useState } from "react";
+import {  useEffect, useState } from "react";
 import { BoxInputs } from '../Box/BoxInputs';
 
 interface InputState {

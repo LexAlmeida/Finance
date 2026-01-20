@@ -41,7 +41,7 @@ const MyCard = ({title, value, icon, isHighlight}: ICard) => {
     const bgColor = isHighlight ? 'primary.main' : 'background.default';
 
     return (
-        // Usamos o Paper para melhor controle de estilo do Material UI
+        // Usamos o Paper para melhor controle de estilo do MUI
         <Card sx={{
             width:{xs: '100%', sm: '27.5rem'}, 
             borderRadius: "6px",
@@ -74,8 +74,8 @@ export const Cards = ({ resumo }: { resumo: ResumoProps }) => {
     
     return (
             <Stack direction='row' spacing={{xs:0,sm:2}} justifyContent='center' gap={2} sx={{
-                // Ajuste de margem (para simular o layout da imagem)
-                mt: { xs: 0, sm: -5 } // Mantemos um pequeno ajuste vertical se necessário
+                // Ajuste de margem 
+                mt: { xs: 0, sm: -5 } 
             }}>
                 <MyCard
                     title="Entrada"

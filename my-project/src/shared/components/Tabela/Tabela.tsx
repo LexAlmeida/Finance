@@ -1,7 +1,6 @@
 import { Paper, Table, TableBody, TableCell, TableContainer, TableRow } from "@mui/material"
-import { useEffect, useState } from "react";
 
-// Interface (Mantenha esta)
+// Interface 
 export interface ITransacao { 
     id:number;
     descricao:string;
@@ -16,7 +15,7 @@ interface TabelaProps {
 }
 
 const formatarPreco = (preco: number): string => {
-    // Usamos Math.abs(preco) para formatar o valor sem o sinal
+    // Math.abs(preco) para formatar o valor sem o sinal
     return new Intl.NumberFormat('pt-br', {
         style:'currency',
         currency: 'BRL'
@@ -33,7 +32,7 @@ export const TabelaTransacoes = ({ transacoes }: TabelaProps) => {
                 <TableBody>
                     {transacoes.map((transacao) => {
                         const tipo = getTipo(transacao.preco);
-                        // Define as cores CSS de acordo com seu tema
+                        // Define as cores CSS de acordo com o tema
                         const borderColor = transacao.preco > 0 ? '#015f43' : '#aa2834';
                         
                         return (
@@ -49,7 +48,6 @@ export const TabelaTransacoes = ({ transacoes }: TabelaProps) => {
                                     scope="row"
                                     sx={{
                                         color: 'text.primary', 
-                                        // ✅ CORREÇÃO: Usando template literal correto
                                         borderBottom: `1px solid ${borderColor}`,
                                     }}
                                 >
@@ -58,7 +56,6 @@ export const TabelaTransacoes = ({ transacoes }: TabelaProps) => {
                                 <TableCell sx={{
                                     color: tipo === 'entrada' ? 'primary.light' : 'secondary.main',
                                     fontWeight:'bold',
-                                    // ✅ CORREÇÃO: Usando template literal correto
                                     borderBottom: `1px solid ${borderColor}`,
                                 }}>
                                     {tipo === 'saida' ? '- ' : ''} 
@@ -66,14 +63,12 @@ export const TabelaTransacoes = ({ transacoes }: TabelaProps) => {
                                 </TableCell>
                                 <TableCell sx={{
                                     color: 'text.primary', 
-                                    // ✅ CORREÇÃO: Usando template literal correto
                                     borderBottom: `1px solid ${borderColor}`,
                                 }}>
                                     {transacao.categoria}
                                 </TableCell>       
                                 <TableCell sx={{
                                     color: 'text.primary', 
-                                    // ✅ CORREÇÃO: Usando template literal correto
                                     borderBottom: `1px solid ${borderColor}`,
                                 }}>
                                     {transacao.data}

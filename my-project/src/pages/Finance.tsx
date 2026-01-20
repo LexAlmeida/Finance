@@ -1,14 +1,11 @@
 import { useEffect, useState, useMemo, useCallback } from "react";
-import { Stack, Typography } from "@mui/material";
 // Importações de componentes
-import { Cards } from "../../shared/components/Cards/Cards";
-import { BoxPrincipal } from "../../shared/components/Box/Box";
-import { Search } from "../../shared/components/Inputs/Search";
-import { TabelaTransacoes } from "../../shared/components/Tabela/Tabela";
+import { Cards } from "../shared/components/Cards/Cards";
+import { BoxPrincipal } from "../shared/components/Box/Box";
+import { Search } from "../shared/components/Inputs/Search";
+import { TabelaTransacoes } from "../shared/components/Tabela/Tabela";
 // Importações de utilitários (para usar no componente)
-import { ITransacao } from "../../shared/components/Tabela/Tabela"; // Reutilizando a interface
-import { NovaTransacao } from "../../shared/components/Dialog/NovaTransacao";
-import SavingsIcon from '@mui/icons-material/Savings';
+import { type ITransacao } from "../shared/components/Tabela/Tabela"; // Reutilizando a interface
 
 // Funções utilitárias (Replicando o que você tem em Tabela/NovaTransacao)
 const getLocalStorageData = (key: string): ITransacao[] => {
@@ -38,9 +35,7 @@ export const Finance = () => {
         setTransacoesCompletas(todasTransacoes);
     }, []);
 
-    // ----------------------------------------------------
-    // EFEITO: Escuta o evento de atualização do Dialog
-    // ----------------------------------------------------
+    // effect: Escuta o evento de atualização do Dialog
     useEffect(() => {
         carregarTransacoes(); // Carrega na montagem inicial
         
@@ -55,9 +50,7 @@ export const Finance = () => {
     }, [carregarTransacoes]);
 
 
-    // ----------------------------------------------------
-    // CÁLCULO: Cards de Resumo (Entrada, Saída, Total)
-    // ----------------------------------------------------
+    // calculo: Cards de Resumo (Entrada, Saída, Total)
     const resumo = useMemo(() => {
         const entradas = transacoesCompletas
             .filter(t => t.preco > 0)
@@ -65,16 +58,14 @@ export const Finance = () => {
 
         const saidas = transacoesCompletas
             .filter(t => t.preco < 0)
-            .reduce((acc, t) => acc + Math.abs(t.preco), 0); // Usamos Math.abs para ter o valor POSITIVO da Saída
+            .reduce((acc, t) => acc + Math.abs(t.preco), 0); // Math.abs para ter o valor positivo da Saída
 
         const total = entradas - saidas;
 
         return { entradas, saidas, total };
     }, [transacoesCompletas]);
 
-    // ----------------------------------------------------
-    // CÁLCULO: Filtro de Busca
-    // ----------------------------------------------------
+    // calculo: Filtro de Busca
     const transacoesFiltradas = useMemo(() => {
         if (!filtro) return transacoesCompletas;
         
