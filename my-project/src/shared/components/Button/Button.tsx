@@ -10,9 +10,9 @@ interface IButtonRegister {
     handleCadastro: () => void;
 }
 
-export const NewButton = () => {
+export const NewButton = ({carregarTransacoes}: {carregarTransacoes: () => void}) => {
     return (
-        <NovaTransacao/>
+        <NovaTransacao onSuccess={carregarTransacoes}/>
     )
 }
 

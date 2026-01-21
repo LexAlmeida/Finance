@@ -8,8 +8,9 @@ import { TabelaTransacoes } from "../shared/components/Tabela/Tabela";
 import { type ITransacao } from "../shared/components/Tabela/Tabela"; // Reutilizando a interface
 import { getTransactions } from "../shared/services/get/transactions";
 import { deleteTransaction } from "../shared/services/delete/transactions";
+import { Outlet } from "react-router-dom";
 
-export const Finance = () => {
+export const Finance = ({setCarregarTransacoes}: {setCarregarTransacoes: (fn: () => void) => void}) => {
     const [transacoesCompletas, setTransacoesCompletas] = useState<ITransacao[]>([]);
     const [filtro, setFiltro] = useState(''); // Estado para o campo de busca
     const [carregando, setCarregando] = useState(true);
@@ -22,7 +23,10 @@ export const Finance = () => {
             const resposta = await getTransactions();
 
             const lista = resposta.transacoes || [];
-            setTransacoesCompletas(lista.sort((a,b) => b.id - a.id));
+            
+            const listaOrdenada = lista.sort((a,b) => b.id - a.id);
+
+            setTransacoesCompletas(listaOrdenada);
 
         }catch(error){
             console.error("Erro ao carregar transações:", error);
@@ -46,19 +50,18 @@ export const Finance = () => {
 
     // effect: Escuta o evento de atualização do Dialog
     useEffect(() => {
-        carregarTransacoes(); // Carrega na montagem inicial
-    }, [carregarTransacoes]);
+        setCarregarTransacoes(() => carregarTransacoes); // Carrega na montagem inicial
+    }, [carregarTransacoes, setCarregarTransacoes]);
 
     // calculo: Cards de Resumo (Entrada, Saída, Total)
     const resumo = useMemo(() => {
         const entradas = transacoesCompletas
             .filter(t => t.tipo === 'entrada')
-            .reduce((acc, t) => acc + (t.valor || 0), 0);
+            .reduce((acc, t) => acc + (Number(t.valor) || 0), 0);
 
         const saidas = transacoesCompletas  
             .filter(t => t.tipo === 'saida')
-            .reduce((acc, t) => acc + (t.valor || 0), 0);
-
+            .reduce((acc, t) => acc + (Number(t.valor) || 0), 0);
         const total = entradas - saidas;
         return { entradas, saidas, total };
     }, [transacoesCompletas]);
@@ -69,8 +72,8 @@ export const Finance = () => {
         
         const filtroLower = filtro.toLowerCase();
         return transacoesCompletas.filter(t => 
-            t.nome.toLowerCase().includes(filtroLower) ||
-            t.categoria.toLowerCase().includes(filtroLower)
+            (t.nome || '').toLowerCase().includes(filtroLower) ||
+            (t.categoria || '').toLowerCase().includes(filtroLower)
         );
     }, [transacoesCompletas, filtro]);
 
@@ -78,6 +81,7 @@ export const Finance = () => {
     return (
         // O BoxPrincipal agora precisa ser envolvido pelo Header (no DefaultLayout)
         <BoxPrincipal>
+            <Outlet context={{carregarTransacoes}}/>
             {/* O Header do DefaultLayout já tem a Imagem e o Botão Nova Transacao (NewButton) */}
             
             {/* 1. Cards (Recebem o resumo calculado e são renderizados após o header) */}

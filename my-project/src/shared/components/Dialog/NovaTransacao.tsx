@@ -41,11 +41,15 @@ export const NovaTransacao = ({onSuccess}: NovaTransacaoProps) => {
                 tipo: tipoSelecionado,
             });
 
-            onSuccess(); // Recarrega a lista de transações no componente pai
             handleClickClose();
+
+            setTimeout(() => {
+                onSuccess(); // Recarrega a lista de transações no componente pai
+            }, 500);
             return true;
-        } catch (error) {
-            console.error("Erro ao salvar a transação:", error);
+        } catch (error: any) {
+            console.error("Status do erro:", error.response?.status);
+            console.error("mensagem do erro:", error.response?.data);
             alert("Erro ao salvar no servidor.");
             return false;
         }

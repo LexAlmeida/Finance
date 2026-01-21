@@ -48,13 +48,13 @@ const Image = () => {
   )
 }
 
-export const Header = () => {
+export const Header = ({carregarTransacoes}: {carregarTransacoes: () => void}) => {
   return (
     
     <HeaderBG>
       <HeaderContentBox>
         <Image/>
-        <NewButton/>
+        <NewButton carregarTransacoes={carregarTransacoes}/>
       </HeaderContentBox>
     </HeaderBG>
 )
