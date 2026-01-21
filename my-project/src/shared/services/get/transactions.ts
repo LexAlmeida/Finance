@@ -14,7 +14,7 @@ interface APIResponse {
   paginacao: any;
 }
 
-export const getTransactions = async (): Promise<APIResponse> => {
-  const response = await api.get<APIResponse>('/api/transacoes');
+export const getTransactions = async (page: number = 1, limit: number = 10): Promise<APIResponse> => {
+  const response = await api.get<APIResponse>(`/api/transacoes`, { params: { page, limit } });
   return response.data;
 }

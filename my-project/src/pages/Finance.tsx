@@ -1,4 +1,5 @@
 import { useEffect, useState, useMemo, useCallback } from "react";
+import { Stack, Pagination } from "@mui/material";
 // Importações de componentes
 import { Cards } from "../shared/components/Cards/Cards";
 import { BoxPrincipal } from "../shared/components/Box/Box";
@@ -12,21 +13,27 @@ import { Outlet } from "react-router-dom";
 
 export const Finance = ({setCarregarTransacoes}: {setCarregarTransacoes: (fn: () => void) => void}) => {
     const [transacoesCompletas, setTransacoesCompletas] = useState<ITransacao[]>([]);
+    const [paginaAtual, setPaginaAtual] = useState(1);
+    const [totalPaginas, setTotalPaginas] = useState(1);
     const [filtro, setFiltro] = useState(''); // Estado para o campo de busca
     const [carregando, setCarregando] = useState(true);
 
     // Função que busca dados da api
-    const carregarTransacoes = useCallback(async () => {
+    const carregarTransacoes = useCallback(async (pagina = 1) => {
         try{
             setCarregando(true);
 
-            const resposta = await getTransactions();
+            const resposta = await getTransactions(pagina, 10); // página e limite
 
             const lista = resposta.transacoes || [];
             
-            const listaOrdenada = lista.sort((a,b) => b.id - a.id);
+            const listaOrdenada = lista.sort((a,b) => b.id - a.id); //isso seria melhor no back, mas né
+            setTransacoesCompletas(lista);
 
-            setTransacoesCompletas(listaOrdenada);
+            if(resposta.paginacao){
+                setTotalPaginas(resposta.paginacao.totalPaginas);
+            }
+            setPaginaAtual(pagina);
 
         }catch(error){
             console.error("Erro ao carregar transações:", error);
@@ -36,12 +43,16 @@ export const Finance = ({setCarregarTransacoes}: {setCarregarTransacoes: (fn: ()
         }
     }, [])
 
+    useEffect(() => {
+        setCarregarTransacoes(() => () => carregarTransacoes(1)); // Carrega na montagem inicial
+    }, [setCarregarTransacoes, carregarTransacoes]);
+
     //Função para deletar transação
     const handleDeleteTransacao = async (id: number) => {
         if(window.confirm("Tem certeza que deseja deletar esta transação?")){
             try {
                 await deleteTransaction(id);
-                await carregarTransacoes(); // Recarrega as transacoes depois dda exclusão
+                await carregarTransacoes(paginaAtual); // Recarrega as transacoes depois dda exclusão
             } catch (error) {
                 alert("Erro ao deletar a transação.");
             }
@@ -50,8 +61,8 @@ export const Finance = ({setCarregarTransacoes}: {setCarregarTransacoes: (fn: ()
 
     // effect: Escuta o evento de atualização do Dialog
     useEffect(() => {
-        setCarregarTransacoes(() => carregarTransacoes); // Carrega na montagem inicial
-    }, [carregarTransacoes, setCarregarTransacoes]);
+        carregarTransacoes(1); // Carrega na montagem inicial
+    }, []);
 
     // calculo: Cards de Resumo (Entrada, Saída, Total)
     const resumo = useMemo(() => {
@@ -94,7 +105,29 @@ export const Finance = ({setCarregarTransacoes}: {setCarregarTransacoes: (fn: ()
             <TabelaTransacoes 
                 transacoes={transacoesFiltradas} 
                 onDelete={handleDeleteTransacao} />
-            
-        </BoxPrincipal>     
+            <Stack spacing={2} sx={{ alignItems: 'center', mt: 4, mb: 2 }}>
+                
+                <Pagination 
+                    count={totalPaginas || 1} 
+                    page={paginaAtual} 
+                    onChange={(_, value) => {
+                        console.log("Página selecionada:", value);
+                        carregarTransacoes(value)}} // Ao clicar, carrega a nova página
+                    color="primary"
+                    shape="rounded"
+                    // Estilização para ficar visível no fundo escuro/cinza
+                    sx={{
+                        '& .MuiPaginationItem-root': {
+                            color: 'text.secondary', // ou '#fff' se estiver muito escuro
+                            '&.Mui-selected': {
+                                backgroundColor: 'primary.main',
+                                color: '#fff'
+                            }
+                        }
+                    }}
+                />
+            </Stack>
+
+        </BoxPrincipal>
     )
 }
