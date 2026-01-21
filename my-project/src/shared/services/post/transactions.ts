@@ -9,6 +9,6 @@ export interface NewTransaction {
 }
 
 export const createTransaction = async (data: NewTransaction): Promise<Transaction>=> {
-  const response = await api.post<Transaction>('/api/transactions', data);
+  const response = await api.post<Transaction>('/api/transacoes', data);
   return response.data;
 }

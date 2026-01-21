@@ -49,7 +49,7 @@ export const BoxInputs = ({onSave, tipoSelecionado, setTipoSelecionado}: IBoxInp
             <TextField 
                 variant="filled" 
                 fullWidth
-                id="descricao" 
+                id="nome" 
                 label="Descrição"
                 value={inputs.nome}
                 sx={{mb:'15px'}}

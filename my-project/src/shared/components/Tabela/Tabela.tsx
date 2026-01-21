@@ -1,11 +1,11 @@
-import { Paper, Table, TableBody, TableCell, TableContainer, TableRow, IconButton, colors } from "@mui/material";
+import { Paper, Table, TableBody, TableCell, TableContainer, TableRow, IconButton } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 
 // Interface 
 export interface ITransacao { 
     id:number;
-    descricao:string;
-    preco:number; // Já é negativo para Saídas
+    nome:string;
+    valor:number; // Já é negativo para Saídas
     categoria:string;
     tipo:'entrada' | 'saida';
     data:string;
@@ -17,26 +17,26 @@ interface TabelaProps {
     onDelete?: (id: number) => void;
 }
 
-const formatarPreco = (preco: number): string => {
-    // Math.abs(preco) para formatar o valor sem o sinal
+const formatarValor = (valor: number): string => {
+    // Math.abs(valor) para formatar o valor sem o sinal
     return new Intl.NumberFormat('pt-br', {
         style:'currency',
         currency: 'BRL'
-    }).format(Math.abs(preco))
+    }).format(Math.abs(valor))
 }
 
 export const TabelaTransacoes = ({ transacoes, onDelete }: TabelaProps) => {
-    // Definir o tipo com base no sinal do preço
-    const getTipo = (preco: number) => preco > 0 ? 'entrada' : 'saida';
+    // Definir o tipo com base no sinal do valor
+    const getTipo = (valor: number) => valor > 0 ? 'entrada' : 'saida';
 
     return (
         <TableContainer component={Paper} sx={{mt:4, borderRadius:'6px', bgcolor:'background.default'}}>
             <Table sx={{minWidth:'650px'}} aria-label="simple table">
                 <TableBody>
                     {transacoes.map((transacao) => {
-                        const tipo = getTipo(transacao.preco);
+                        const tipo = getTipo(transacao.valor);
                         // Define as cores CSS de acordo com o tema
-                        const borderColor = transacao.preco > 0 ? '#015f43' : '#aa2834';
+                        const borderColor = transacao.valor > 0 ? '#015f43' : '#aa2834';
                         
                         return (
                             <TableRow 
@@ -55,7 +55,7 @@ export const TabelaTransacoes = ({ transacoes, onDelete }: TabelaProps) => {
                                         borderBottom: `1px solid ${borderColor}`,
                                     }}
                                 >
-                                    {transacao.descricao}
+                                    {transacao.nome}
                                 </TableCell>
                                 {/*preco*/}
                                 <TableCell sx={{
@@ -64,7 +64,7 @@ export const TabelaTransacoes = ({ transacoes, onDelete }: TabelaProps) => {
                                     borderBottom: `1px solid ${borderColor}`,
                                 }}>
                                     {tipo === 'saida' ? '- ' : ''} 
-                                    {formatarPreco(transacao.preco)}
+                                    {formatarValor(transacao.valor)}
                                 </TableCell>
                                 {/*categoria*/}
                                 <TableCell sx={{

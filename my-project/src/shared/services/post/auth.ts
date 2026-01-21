@@ -12,10 +12,10 @@ interface LoginResponse {
 }
 
 // Função que envia o login (POST)
-export const loginService = async (loginInput: string, senhaInput: string): Promise<LoginResponse> => {
+export const loginService = async (login: string, senha: string): Promise<LoginResponse> => {
     const response = await api.post<LoginResponse>('/api/login', {
-        login: loginInput,
-        senha: senhaInput
+        login: login,
+        senha: senha
     });
     return response.data;
 };

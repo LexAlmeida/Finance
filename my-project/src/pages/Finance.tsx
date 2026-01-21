@@ -18,8 +18,11 @@ export const Finance = () => {
     const carregarTransacoes = useCallback(async () => {
         try{
             setCarregando(true);
-            const dados = await getTransactions();
-            setTransacoesCompletas(dados.sort((a,b) => b.id - a.id));
+
+            const resposta = await getTransactions();
+
+            const lista = resposta.transacoes || [];
+            setTransacoesCompletas(lista.sort((a,b) => b.id - a.id));
 
         }catch(error){
             console.error("Erro ao carregar transações:", error);
@@ -50,11 +53,11 @@ export const Finance = () => {
     const resumo = useMemo(() => {
         const entradas = transacoesCompletas
             .filter(t => t.tipo === 'entrada')
-            .reduce((acc, t) => acc + t.preco, 0);
+            .reduce((acc, t) => acc + (t.valor || 0), 0);
 
         const saidas = transacoesCompletas  
             .filter(t => t.tipo === 'saida')
-            .reduce((acc, t) => acc + t.preco, 0);
+            .reduce((acc, t) => acc + (t.valor || 0), 0);
 
         const total = entradas - saidas;
         return { entradas, saidas, total };
@@ -66,7 +69,7 @@ export const Finance = () => {
         
         const filtroLower = filtro.toLowerCase();
         return transacoesCompletas.filter(t => 
-            t.descricao.toLowerCase().includes(filtroLower) ||
+            t.nome.toLowerCase().includes(filtroLower) ||
             t.categoria.toLowerCase().includes(filtroLower)
         );
     }, [transacoesCompletas, filtro]);

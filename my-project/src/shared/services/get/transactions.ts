@@ -2,14 +2,19 @@ import {api} from "../api";
 
 export interface Transaction {
   id: number;
-  descricao: string;
-  preco: number;
+  nome: string;
+  valor: number;
   categoria: string;
   tipo: 'entrada' | 'saida';
   data: string;
 }
 
-export const getTransactions = async (): Promise<Transaction[]> => {
-  const response = await api.get<Transaction[]>('/api/transacoes');
+interface APIResponse {
+  transacoes: Transaction[];
+  paginacao: any;
+}
+
+export const getTransactions = async (): Promise<APIResponse> => {
+  const response = await api.get<APIResponse>('/api/transacoes');
   return response.data;
 }
