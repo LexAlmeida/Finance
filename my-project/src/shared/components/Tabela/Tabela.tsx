@@ -1,5 +1,6 @@
-import { Paper, Table, TableBody, TableCell, TableContainer, TableRow, IconButton } from "@mui/material";
+import { Paper, Table, TableBody, TableCell, TableContainer, TableRow, IconButton, Stack, Tooltip } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 
 // Interface 
 export interface ITransacao { 
@@ -15,6 +16,7 @@ export interface ITransacao {
 interface TabelaProps {
     transacoes: ITransacao[];
     onDelete?: (id: number) => void;
+    onEdit?: (transacao: ITransacao) => void;
 }
 
 const formatarValor = (valor: number): string => {
@@ -26,24 +28,23 @@ const formatarValor = (valor: number): string => {
 }
 
 export const TabelaTransacoes = ({ transacoes, onDelete }: TabelaProps) => {
-    // Definir o tipo com base no sinal do valor
-    const getTipo = (valor: number) => valor > 0 ? 'entrada' : 'saida';
-
     return (
         <TableContainer component={Paper} sx={{mt:4, borderRadius:'6px', bgcolor:'background.default'}}>
             <Table sx={{minWidth:'650px'}} aria-label="simple table">
                 <TableBody>
                     {transacoes.map((transacao) => {
-                        const tipo = getTipo(transacao.valor);
+                        const isSaida = transacao.tipo === 'saida';
+                        const tipo = isSaida ? 'saida' : 'entrada';
                         // Define as cores CSS de acordo com o tema
-                        const borderColor = transacao.valor > 0 ? '#015f43' : '#aa2834';
+                        const borderColor = tipo === 'entrada' ? '#015f43' : '#aa2834';
                         
                         return (
                             <TableRow 
                                 key={transacao.id} 
                                 sx={{
                                     '&:last-child td, &:last-child th':{border:0}, 
-                                    '&:hover': { bgcolor: 'background.paper' }
+                                    '&:hover': { bgcolor: 'background.paper' },
+                                    transition: 'background-color 0.3s',
                                 }}
                             >
                                 {/*descrição*/}
@@ -53,41 +54,72 @@ export const TabelaTransacoes = ({ transacoes, onDelete }: TabelaProps) => {
                                     sx={{
                                         color: 'text.primary', 
                                         borderBottom: `1px solid ${borderColor}`,
+                                        py: 2.5,
+                                        fontSize: '1rem',
                                     }}
                                 >
                                     {transacao.nome}
                                 </TableCell>
+
                                 {/*preco*/}
                                 <TableCell sx={{
                                     color: tipo === 'entrada' ? 'primary.light' : 'secondary.main',
                                     fontWeight:'bold',
                                     borderBottom: `1px solid ${borderColor}`,
+                                    whiteSpace: 'nowrap',
+                                    fontSize: '1rem',
+                                    py: 2.5,
                                 }}>
                                     {tipo === 'saida' ? '- ' : ''} 
                                     {formatarValor(transacao.valor)}
                                 </TableCell>
+
                                 {/*categoria*/}
                                 <TableCell sx={{
                                     color: 'text.primary', 
                                     borderBottom: `1px solid ${borderColor}`,
+                                    py: 2.5,
                                 }}>
                                     {transacao.categoria}
                                 </TableCell> 
+
                                 {/*data*/}      
                                 <TableCell sx={{
                                     color: 'text.primary', 
                                     borderBottom: `1px solid ${borderColor}`,
+                                    whiteSpace: 'nowrap',
+                                    py: 2.5,
                                 }}>
                                     {transacao.data}
                                 </TableCell>  
+
+                                {/*ações editar e deletar*/}
                                 <TableCell align="right" sx={{
                                     borderBottom:`1px solid ${borderColor}`,
+                                    py: 2.5,
                                 }}>
-                                    <IconButton 
-                                        onClick={() => onDelete?.(transacao.id)}
-                                        sx={{color:'#7c7c8a', "&:hover": {color: '#8a2834'}}}>
-                                        <DeleteIcon fontSize="small" />
-                                    </IconButton>
+                                    <Stack direction="row" spacing={1} justifyContent="flex-end">
+                                        <Tooltip title="Editar">
+                                            <IconButton
+                                                onClick={() => onEdit?.(transacao)}
+                                                sx={{
+                                                    color: 'primary.dark',
+                                                    "&:hover": { color: 'primary.main', backgroundColor: 'rgba(0, 179, 126, 0.1)'}
+                                                }}>
+                                                <EditIcon fontSize="small" />
+                                            </IconButton>
+                                        </Tooltip>
+                                        <Tooltip title="Deletar">
+                                            <IconButton 
+                                                onClick={() => onDelete?.(transacao.id)}
+                                                sx={{
+                                                    color:'#565658', 
+                                                    "&:hover": {color: 'secondary.main', backgroundColor: 'rgba(247, 90, 104, 0.1)'}}}>
+                                                <DeleteIcon fontSize="small" />
+                                            </IconButton>
+                                        </Tooltip>
+                                    </Stack>
+                                    
                                 </TableCell>                     
                             </TableRow>
                         );
