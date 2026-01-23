@@ -27,8 +27,8 @@ export const Finance = ({setCarregarTransacoes}: {setCarregarTransacoes: (fn: ()
 
             const lista = resposta.transacoes || [];
             
-            const listaOrdenada = lista.sort((a,b) => b.id - a.id); //isso seria melhor no back, mas né
-            setTransacoesCompletas(lista);
+            const listaOrdenada = lista.sort((a,b) => b.id - a.id); // Ordena por ID decrescente
+            setTransacoesCompletas(listaOrdenada);
 
             if(resposta.paginacao){
                 setTotalPaginas(resposta.paginacao.totalPaginas);
