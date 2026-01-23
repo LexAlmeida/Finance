@@ -101,7 +101,7 @@ export const TabelaTransacoes = ({ transacoes, onDelete }: TabelaProps) => {
                                     <Stack direction="row" spacing={1} justifyContent="flex-end">
                                         <Tooltip title="Editar">
                                             <IconButton
-                                                onClick={() => onEdit?.(transacao)}
+                                                //onClick={() => onEdit?.(transacao)}//
                                                 sx={{
                                                     color: 'primary.dark',
                                                     "&:hover": { color: 'primary.main', backgroundColor: 'rgba(0, 179, 126, 0.1)'}

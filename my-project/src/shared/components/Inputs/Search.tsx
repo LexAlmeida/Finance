@@ -1,4 +1,4 @@
-import { Box, TextField, Button } from "@mui/material"
+import { Box, TextField } from "@mui/material"
 import { ButtonSearch } from "../Button/Button" // Seu componente de botão
 
 interface SearchProps {

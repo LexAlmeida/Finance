@@ -12,6 +12,7 @@ import { deleteTransaction } from "../shared/services/delete/transactions";
 import { Outlet } from "react-router-dom";
 
 export const Finance = ({setCarregarTransacoes}: {setCarregarTransacoes: (fn: () => void) => void}) => {
+    //const navigate = useNavigate();
     const [transacoesCompletas, setTransacoesCompletas] = useState<ITransacao[]>([]);
     const [paginaAtual, setPaginaAtual] = useState(1);
     const [totalPaginas, setTotalPaginas] = useState(1);
@@ -37,7 +38,7 @@ export const Finance = ({setCarregarTransacoes}: {setCarregarTransacoes: (fn: ()
 
         }catch(error){
             console.error("Erro ao carregar transações:", error);
-            alert("Erro ao conectar com o servidor de finanças.")
+            //alert("Erro ao conectar com o servidor de finanças.")//
         } finally {
             setCarregando(false);
         }
@@ -52,12 +53,23 @@ export const Finance = ({setCarregarTransacoes}: {setCarregarTransacoes: (fn: ()
         if(window.confirm("Tem certeza que deseja deletar esta transação?")){
             try {
                 await deleteTransaction(id);
-                await carregarTransacoes(paginaAtual); // Recarrega as transacoes depois dda exclusão
+                if(transacoesCompletas.length === 1 && paginaAtual > 1){
+                    carregarTransacoes(paginaAtual - 1);
+                } else {
+                    carregarTransacoes(paginaAtual); // Recarrega as transacoes depois da exclusão
+                }
             } catch (error) {
                 alert("Erro ao deletar a transação.");
             }
         }
     }
+
+    //Funcao para editar transacao
+    //const handleEditTransacao = (transacao: ITransacao) => {
+        //navigate('nova', {
+            //state: { transacaoParaEditar: transacao }
+        //});
+    //};
 
     // effect: Escuta o evento de atualização do Dialog
     useEffect(() => {
@@ -104,7 +116,9 @@ export const Finance = ({setCarregarTransacoes}: {setCarregarTransacoes: (fn: ()
             {/* 3. Tabela (Recebe a lista de transações FILTRADAS) */}
             <TabelaTransacoes 
                 transacoes={transacoesFiltradas} 
-                onDelete={handleDeleteTransacao} />
+                onDelete={handleDeleteTransacao} 
+                //onEdit={handleEditTransacao}//
+            />
             <Stack spacing={2} sx={{ alignItems: 'center', mt: 4, mb: 2 }}>
                 
                 <Pagination 
