@@ -4,6 +4,16 @@ import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import { Box, Card, Stack, Typography } from '@mui/material';
 import { useTransactions } from '../../hooks/TransactionsContext';
 
+// sobre o token quero fazer como o da uno eu acho
+// quando expirar o token, mostrar um aviso pedindo 
+// se o usuario ainda esta na tela,
+// depois de um tempo sem resposta ele leva para o
+// login e se ele clicar que ainda esta ali
+// gerar um novo token, com duracao de  30 min 
+// tambem. mas primeiro resolver os cards -> nao 
+// esta pegando os dados das transacoes,
+// e tambem queria deixar eles presos ali em cima 
+//mesmo se descer para ver as transacoes//
 // --- Interfaces para Props ---
 interface ICard {
     title: string;
