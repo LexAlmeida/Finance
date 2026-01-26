@@ -108,7 +108,7 @@ export const Finance = ({setCarregarTransacoes}: {setCarregarTransacoes: (fn: ()
             {/* O Header do DefaultLayout já tem a Imagem e o Botão Nova Transacao (NewButton) */}
             
             {/* 1. Cards (Recebem o resumo calculado e são renderizados após o header) */}
-            <Cards resumo={resumo} />
+            <Cards />
 
             {/* 2. Search (Recebe o estado e a função de atualização do filtro) */}
             <Search filtro={filtro} setFiltro={setFiltro} />

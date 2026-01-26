@@ -2,13 +2,9 @@ import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp';
 import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import { Box, Card, Stack, Typography } from '@mui/material';
+import { useTransactions } from '../../hooks/TransactionsContext';
 
 // --- Interfaces para Props ---
-interface ResumoProps {
-    entradas: number;
-    saidas: number;
-    total: number;
-}
 interface ICard {
     title: string;
     value: string;
@@ -70,8 +66,8 @@ const MyCard = ({title, value, icon, isHighlight}: ICard) => {
 }
 
 // --- Componente Principal Cards ---
-export const Cards = ({ resumo }: { resumo: ResumoProps }) => {
-    
+export const Cards = () => {
+    const { resumo } = useTransactions();
     return (
             <Stack direction='row' spacing={{xs:0,sm:2}} justifyContent='center' gap={2} sx={{
                 // Ajuste de margem 

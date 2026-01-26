@@ -18,9 +18,16 @@ export interface PaginacaoMetaData {
   temAnterior: boolean;
 }
 
+export interface ResumoTransacoes {
+  entradas: number;
+  saidas: number;
+  total: number;
+}
+
 interface APIResponse {
   transacoes: Transaction[];
   paginacao: PaginacaoMetaData;
+  resumo: ResumoTransacoes;
 }
 
 export const getTransactions = async (page: number = 1, limit: number = 10): Promise<APIResponse> => {

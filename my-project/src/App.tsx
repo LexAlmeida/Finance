@@ -1,7 +1,8 @@
 import { BrowserRouter } from "react-router-dom"
 import { AppRoutes } from "./routes"
 import { ThemeContext } from "./shared/context/ThemeContext"
-import CSSBaseLine from "@mui/material/CssBaseline" 
+import CSSBaseLine from "@mui/material/CssBaseline"
+import { TransactionsProvider } from "./shared/hooks/TransactionsContext" 
 
 function App() {
 
@@ -9,8 +10,10 @@ function App() {
     <>
       <BrowserRouter>
         <ThemeContext>
-          <CSSBaseLine/>
-          <AppRoutes/>
+          <TransactionsProvider>
+            <CSSBaseLine/>
+            <AppRoutes/>
+          </TransactionsProvider>
         </ThemeContext>
       </BrowserRouter>
     </>
