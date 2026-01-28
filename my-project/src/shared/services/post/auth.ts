@@ -7,8 +7,10 @@ interface LoginResponse {
     usuario: {
         id: number;
         login: string;
-    };
-    
+    };   
+}
+interface RefreshTokenResponse {
+    token: string;
 }
 
 // Função que envia o login (POST)
@@ -20,7 +22,10 @@ export const loginService = async (login: string, senha: string): Promise<LoginR
     return response.data;
 };
 
+//Funcao que renova o token
 export const refreshToken = async (): Promise<string> => {
-    const {data} = await api.get('/api/refresh-token');
+    const refreshToken = localStorage.getItem('APP_REFRESH_TOKEN');
+    const {data} = await api.post<RefreshTokenResponse>('/api/refresh-token', {refreshToken: refreshToken});
+    console.log("Novo token recebido:", data.token);
     return data.token
 }

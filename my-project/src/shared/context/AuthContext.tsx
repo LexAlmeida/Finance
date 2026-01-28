@@ -17,11 +17,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [isWarningOpen, setIsWarningOpen] = useState(false);
 
-    const warningTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-    const logoutTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+    const warningTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const logoutTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-    const TOTAL_TIME = 5 * 60 * 1000; // 5 min
-    const WARNING_TIME = 4 * 60 * 1000; // 4 min
+    const TOTAL_TIME = 1 * 60 * 1000; // 1 min
+    const WARNING_TIME = 50 * 1000; // 10 sec
 
     const clearTimers = () => {
         if (warningTimeoutRef.current) clearTimeout(warningTimeoutRef.current);
@@ -35,7 +35,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         localStorage.removeItem('usuario-logado');
         localStorage.removeItem('TOKEN_CREATION_TIME');
         
-        api.defaults.headers.Authorization = undefined;
+        api.defaults.headers.Authorization = null;
         setIsAuthenticated(false);
         setIsWarningOpen(false);
         navigate('/login');
@@ -49,7 +49,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const timeUntilWarning = WARNING_TIME - timeElapsed;
         const timeUntilLogout = TOTAL_TIME - timeElapsed;
 
-        // Se o token já expirou (passou de 5 min), desloga na hora
+        // Se o token já expirou, desloga na hora
         if (timeUntilLogout <= 0) {
             logout(); 
             return;
@@ -59,7 +59,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (timeUntilWarning > 0) {
             warningTimeoutRef.current = setTimeout(() => setIsWarningOpen(true), timeUntilWarning);
         } else {
-            // Se já passou dos 4 min mas não dos 5, mostra o aviso imediatamente
             setIsWarningOpen(true);
         }
 

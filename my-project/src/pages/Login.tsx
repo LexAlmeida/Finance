@@ -5,10 +5,11 @@ import SavingsIcon from '@mui/icons-material/Savings';
 import EmailIcon from '@mui/icons-material/Email';
 import LockIcon from '@mui/icons-material/Lock';
 import { loginService } from "../shared/services/post/auth";
-import { api } from "../shared/services/api";
+import { useAuth } from "../shared/context/AuthContext";
 
 export const Login = () => {
     const navigate = useNavigate();
+    const { loginSuccess } = useAuth();
 
     const [loginInput, setLoginInput] = useState('');
     const [senhaInput, setSenhaInput] = useState('');
@@ -19,22 +20,17 @@ export const Login = () => {
         try{
             setErro(false);
             const data = await loginService(loginInput, senhaInput);
+            
+            console.log('Resposta completa do login:', data);
 
+            localStorage.setItem('APP_REFRESH_TOKEN', data.token);
             //salvar token no navegador
-            localStorage.setItem('APP_ACCESS_TOKEN', data.token);
-
-            //salvar dados do usuário no navegador
-            localStorage.setItem('usuario-logado',JSON.stringify({
-                nome: data.usuario.login,
-                id: data.usuario.id,
-            }));
-
-            //atualiza imediatamente
-            api.defaults.headers.Authorization = `Bearer ${data.token}`;
+            loginSuccess(data.token, data.usuario);
 
             navigate('/pagina-inicial');
         } catch (error: any) {
             setErro(true);
+            console.error("Erro no login:", error);
             alert(error.response?.data?.erro || "Erro no Login.");
         };
     };
