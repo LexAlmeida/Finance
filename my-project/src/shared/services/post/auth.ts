@@ -19,3 +19,8 @@ export const loginService = async (login: string, senha: string): Promise<LoginR
     });
     return response.data;
 };
+
+export const refreshToken = async (): Promise<string> => {
+    const {data} = await api.get('/api/refresh-token');
+    return data.token
+}
