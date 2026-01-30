@@ -1,4 +1,5 @@
 import { createContext, useEffect, useState, type ReactNode, useContext } from 'react';
+import {useAuth} from '../context/AuthContext';
 // Importacao de interfaces e servicos
 import { 
     getTransactions, 
@@ -15,6 +16,7 @@ interface TransactionsContextData {
 const TransactionsContext = createContext<TransactionsContextData>({} as TransactionsContextData);
 
 export function TransactionsProvider({ children }: { children: ReactNode }) {
+    const {isAuthenticated} = useAuth();
     const [transacoes, setTransacoes] = useState<Transaction[]>([]);
     
     const [resumo, setResumo] = useState<ResumoTransacoes>({
@@ -24,6 +26,8 @@ export function TransactionsProvider({ children }: { children: ReactNode }) {
     });
 
     async function fetchTransactions(page = 1) {
+        const token = localStorage.getItem('APP_ACCESS_TOKEN');
+        if(!token) return
         try {
             const data = await getTransactions(page);   
             //atualizada lista de transacoes 
@@ -39,8 +43,8 @@ export function TransactionsProvider({ children }: { children: ReactNode }) {
 
     // Carrega na montagem do componente
     useEffect(() => {
-        fetchTransactions();
-    }, []);
+        if(isAuthenticated) fetchTransactions();
+    }, [isAuthenticated]);
 
     return (
         <TransactionsContext.Provider value={{ 
