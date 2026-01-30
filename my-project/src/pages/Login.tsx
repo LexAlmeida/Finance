@@ -23,9 +23,11 @@ export const Login = () => {
             
             console.log('Resposta completa do login:', data);
 
-            localStorage.setItem('APP_REFRESH_TOKEN', data.token);
-            //salvar token no navegador
-            loginSuccess(data.token, data.usuario);
+            loginSuccess(
+                data.token,
+                data.refreshToken,
+                data.usuario
+            );
 
             navigate('/pagina-inicial');
         } catch (error: any) {

@@ -7,7 +7,7 @@ import { refreshToken } from '../services/post/auth';
 interface AuthContextData {
     isAuthenticated: boolean;
     logout: () => void;
-    loginSuccess: (token: string, usuario: any) => void;
+    loginSuccess: (token: string, refreshToken: string, usuario?: any) => void;
 }
 
 const AuthContext = createContext({} as AuthContextData);
@@ -21,7 +21,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const logoutTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     const TOTAL_TIME = 1 * 60 * 1000; // 1 min
-    const WARNING_TIME = 50 * 1000; // 10 sec
+    const WARNING_TIME = 50 * 1000; // 50 sec
 
     const clearTimers = () => {
         if (warningTimeoutRef.current) clearTimeout(warningTimeoutRef.current);
@@ -32,6 +32,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         clearTimers();
         // Limpeza total
         localStorage.removeItem('APP_ACCESS_TOKEN');
+        localStorage.removeItem('APP_REFRESH_TOKEN');
         localStorage.removeItem('usuario-logado');
         localStorage.removeItem('TOKEN_CREATION_TIME');
         
@@ -66,11 +67,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         logoutTimeoutRef.current = setTimeout(() => logout(), timeUntilLogout);
     };
 
-    const loginSuccess = (token: string, usuario: any) => {
+    const loginSuccess = (token: string, refreshToken: string, usuario?: any) => {
         const now = Date.now();
         
         // setItem SOBRESCREVE o antigo automaticamente.
         localStorage.setItem('APP_ACCESS_TOKEN', token);
+        localStorage.setItem('APP_REFRESH_TOKEN', refreshToken);
         localStorage.setItem('usuario-logado', JSON.stringify(usuario));
         localStorage.setItem('TOKEN_CREATION_TIME', now.toString());
         
@@ -81,15 +83,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const handleRenewSession = async () => {
         try {
-            const newToken = await refreshToken();
-            // Ao receber o novo token, chama o loginSuccess de novo
-            // Ele vai apagar o token velho do storage e colocar o novo
-            // E vai reiniciar a contagem do zero.
+            console.log("Renovando sessão...");
+            const {token:newAccessToken, refreshToken:newRefreshToken} = await refreshToken();
+
             const usuario = JSON.parse(localStorage.getItem('usuario-logado') || '{}');
-            loginSuccess(newToken, usuario);
+            loginSuccess(newAccessToken, newRefreshToken, usuario);
             
             setIsWarningOpen(false);
+            console.log("Sessão renovada com sucesso.");
         } catch (error) {
+            console.error("Falha ao renovar sessão (token expirado ou inválido):", error);
             logout();
         }
     };

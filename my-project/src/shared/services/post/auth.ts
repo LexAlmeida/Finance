@@ -4,6 +4,7 @@ import { api } from "../api";
 interface LoginResponse {
     mensagem: string;
     token: string;
+    refreshToken: string;
     usuario: {
         id: number;
         login: string;
@@ -11,6 +12,7 @@ interface LoginResponse {
 }
 interface RefreshTokenResponse {
     token: string;
+    refreshToken: string;
 }
 
 // Função que envia o login (POST)
@@ -23,9 +25,11 @@ export const loginService = async (login: string, senha: string): Promise<LoginR
 };
 
 //Funcao que renova o token
-export const refreshToken = async (): Promise<string> => {
-    const refreshToken = localStorage.getItem('APP_REFRESH_TOKEN');
-    const {data} = await api.post<RefreshTokenResponse>('/api/refresh-token', {refreshToken: refreshToken});
+export const refreshToken = async (): Promise<RefreshTokenResponse> => {
+    const currentRefreshToken = localStorage.getItem('APP_REFRESH_TOKEN');
+    if(!currentRefreshToken) throw new Error("Nenhum refresh token encontrado");
+    
+    const {data} = await api.post<RefreshTokenResponse>('/api/refresh-token', {refreshToken: currentRefreshToken});
     console.log("Novo token recebido:", data.token);
-    return data.token
+    return data;
 }
