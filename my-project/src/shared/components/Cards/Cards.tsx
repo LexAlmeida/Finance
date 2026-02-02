@@ -2,27 +2,23 @@ import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp';
 import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import { Box, Card, Stack, Typography } from '@mui/material';
-import { useTransactions } from '../../hooks/TransactionsContext';
 
-// sobre o token quero fazer como o da uno eu acho
-// quando expirar o token, mostrar um aviso pedindo 
-// se o usuario ainda esta na tela,
-// depois de um tempo sem resposta ele leva para o
-// login e se ele clicar que ainda esta ali
-// gerar um novo token, com duracao de  30 min 
-// tambem. mas primeiro resolver os cards -> nao 
-// esta pegando os dados das transacoes,
-// e tambem queria deixar eles presos ali em cima 
-//mesmo se descer para ver as transacoes//
-// --- Interfaces para Props ---
+// Interfaces para Props 
 interface ICard {
     title: string;
     value: string;
     icon: string;
     isHighlight: boolean;
 }
+interface CardProps {
+    resumo: {
+        total: number;
+        entradas: number;
+        saidas: number;
+    }
+}
 
-// --- Funções Auxiliares ---
+// Funções Auxiliares
 const formatarPreco = (preco: number): string => {
     return new Intl.NumberFormat('pt-br', {
         style:'currency',
@@ -36,23 +32,21 @@ const IconMap: {[key: string]: React.ElementType} = {
     money: AttachMoneyIcon
 }
 
-// --- Sub-Componente de Card ---
+// Sub-Componente de Card 
 const MyCard = ({title, value, icon, isHighlight}: ICard) => {
     const IconComponent = IconMap[icon];
     
-    // Define a cor do ícone com base no tema e destaque
+    // Define a cor do ícone 
     const iconColor = isHighlight ? 'text.secondary' : (title === 'Entrada' ? 'primary.light' : 'secondary.main');
     
-    // Define a cor do fundo com base no destaque
     const bgColor = isHighlight ? 'primary.main' : 'background.default';
 
     return (
-        // Usamos o Paper para melhor controle de estilo do MUI
         <Card sx={{
             width:{xs: '100%', sm: '27.5rem'}, 
             borderRadius: "6px",
             mb: {xs:2, sm:0},
-            bgcolor: bgColor, // Fundo dinâmico
+            bgcolor: bgColor,
             color: isHighlight ? 'contrastText' : 'text.secondary', 
             p: 4
         }}>
@@ -75,9 +69,8 @@ const MyCard = ({title, value, icon, isHighlight}: ICard) => {
     )
 }
 
-// --- Componente Principal Cards ---
-export const Cards = () => {
-    const { resumo } = useTransactions();
+// Componente Principal Cards 
+export const Cards = ({ resumo }: CardProps ) => {
     return (
             <Stack direction='row' spacing={{xs:0,sm:2}} justifyContent='center' gap={2} sx={{
                 // Ajuste de margem 

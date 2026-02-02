@@ -1,34 +1,60 @@
 import { useEffect, useState, useMemo, useCallback } from "react";
-import { Stack, Pagination } from "@mui/material";
-// Importações de componentes
+import { Stack, Pagination, Box } from "@mui/material"; 
 import { Cards } from "../shared/components/Cards/Cards";
 import { BoxPrincipal } from "../shared/components/Box/Box";
 import { Search } from "../shared/components/Inputs/Search";
 import { TabelaTransacoes } from "../shared/components/Tabela/Tabela";
-// Importações de utilitários (para usar no componente)
-import { type ITransacao } from "../shared/components/Tabela/Tabela"; // Reutilizando a interface
+import { type ITransacao } from "../shared/components/Tabela/Tabela"; 
 import { getTransactions } from "../shared/services/get/transactions";
 import { deleteTransaction } from "../shared/services/delete/transactions";
 import { Outlet } from "react-router-dom";
 
+// Interface do estado do resumo
+interface IResumo {
+    entradas: number;
+    saidas: number;
+    total: number;
+}
+
 export const Finance = ({setCarregarTransacoes}: {setCarregarTransacoes: (fn: () => void) => void}) => {
-    //const navigate = useNavigate();
     const [transacoesCompletas, setTransacoesCompletas] = useState<ITransacao[]>([]);
     const [paginaAtual, setPaginaAtual] = useState(1);
     const [totalPaginas, setTotalPaginas] = useState(1);
-    const [filtro, setFiltro] = useState(''); // Estado para o campo de busca
-    const [carregando, setCarregando] = useState(true);
+    const [filtro, setFiltro] = useState(''); 
+    const [resumoDados, setResumoDados] = useState<IResumo>({ entradas: 0, saidas: 0, total: 0 });
 
-    // Função que busca dados da api
-    const carregarTransacoes = useCallback(async (pagina = 1) => {
-        try{
-            setCarregando(true);
+    // Função que calcula o TOTAL REAL (busca tudo) 
+    const buscarResumoGlobal = useCallback(async () => {
+        try {
+            const resposta = await getTransactions(1, 10000); 
+            const listaCompleta = resposta.transacoes || [];
 
-            const resposta = await getTransactions(pagina, 10); // página e limite
+            const entradas = listaCompleta
+                .filter((t: ITransacao) => t.tipo === 'entrada')
+                .reduce((acc: number, t: ITransacao) => acc + (Number(t.valor) || 0), 0);
 
-            const lista = resposta.transacoes || [];
+            const saidas = listaCompleta  
+                .filter((t: ITransacao) => t.tipo === 'saida')
+                .reduce((acc: number, t: ITransacao) => acc + (Number(t.valor) || 0), 0);
             
-            const listaOrdenada = lista.sort((a,b) => b.id - a.id); // Ordena por ID decrescente
+            // Atualiza o estado que vai para os Cards
+            setResumoDados({
+                entradas,
+                saidas,
+                total: entradas - saidas
+            });
+
+        } catch (error) {
+            console.error("Erro ao calcular resumo:", error);
+        }
+    }, []);
+
+    //  Função principal de carregamento
+    const carregarDados = useCallback(async (pagina = 1) => {
+        try{
+            const resposta = await getTransactions(pagina, 10); 
+            const lista = resposta.transacoes || [];
+            const listaOrdenada = lista.sort((a: ITransacao, b: ITransacao) => b.id - a.id);
             setTransacoesCompletas(listaOrdenada);
 
             if(resposta.paginacao){
@@ -36,27 +62,32 @@ export const Finance = ({setCarregarTransacoes}: {setCarregarTransacoes: (fn: ()
             }
             setPaginaAtual(pagina);
 
+            await buscarResumoGlobal();
         }catch(error){
-            console.error("Erro ao carregar transações:", error);
-            //alert("Erro ao conectar com o servidor de finanças.")//
-        } finally {
-            setCarregando(false);
+            console.error("Erro ao carregar dados:", error);
         }
-    }, [])
+    }, [buscarResumoGlobal]);
 
+    // Expondo a função de recarregar para o Outlet
     useEffect(() => {
-        setCarregarTransacoes(() => () => carregarTransacoes(1)); // Carrega na montagem inicial
-    }, [setCarregarTransacoes, carregarTransacoes]);
+        setCarregarTransacoes(() => () => carregarDados(1)); 
+    }, [setCarregarTransacoes, carregarDados]);
 
-    //Função para deletar transação
+    // Carrega na montagem inicial
+    useEffect(() => {
+        carregarDados(1); 
+    }, [carregarDados]);
+
+    // Função para deletar transação
     const handleDeleteTransacao = async (id: number) => {
         if(window.confirm("Tem certeza que deseja deletar esta transação?")){
             try {
                 await deleteTransaction(id);
+                // Ao deletar, recarrega tudo 
                 if(transacoesCompletas.length === 1 && paginaAtual > 1){
-                    carregarTransacoes(paginaAtual - 1);
+                    carregarDados(paginaAtual - 1);
                 } else {
-                    carregarTransacoes(paginaAtual); // Recarrega as transacoes depois da exclusão
+                    carregarDados(paginaAtual); 
                 }
             } catch (error) {
                 alert("Erro ao deletar a transação.");
@@ -64,35 +95,9 @@ export const Finance = ({setCarregarTransacoes}: {setCarregarTransacoes: (fn: ()
         }
     }
 
-    //Funcao para editar transacao
-    //const handleEditTransacao = (transacao: ITransacao) => {
-        //navigate('nova', {
-            //state: { transacaoParaEditar: transacao }
-        //});
-    //};
-
-    // effect: Escuta o evento de atualização do Dialog
-    useEffect(() => {
-        carregarTransacoes(1); // Carrega na montagem inicial
-    }, []);
-
-    // calculo: Cards de Resumo (Entrada, Saída, Total)
-    const resumo = useMemo(() => {
-        const entradas = transacoesCompletas
-            .filter(t => t.tipo === 'entrada')
-            .reduce((acc, t) => acc + (Number(t.valor) || 0), 0);
-
-        const saidas = transacoesCompletas  
-            .filter(t => t.tipo === 'saida')
-            .reduce((acc, t) => acc + (Number(t.valor) || 0), 0);
-        const total = entradas - saidas;
-        return { entradas, saidas, total };
-    }, [transacoesCompletas]);
-
-    // calculo: Filtro de Busca
+    // Filtro apenas visual da tabela
     const transacoesFiltradas = useMemo(() => {
         if (!filtro) return transacoesCompletas;
-        
         const filtroLower = filtro.toLowerCase();
         return transacoesCompletas.filter(t => 
             (t.nome || '').toLowerCase().includes(filtroLower) ||
@@ -100,39 +105,44 @@ export const Finance = ({setCarregarTransacoes}: {setCarregarTransacoes: (fn: ()
         );
     }, [transacoesCompletas, filtro]);
 
-
     return (
-        // O BoxPrincipal agora precisa ser envolvido pelo Header (no DefaultLayout)
         <BoxPrincipal>
-            <Outlet context={{carregarTransacoes}}/>
-            {/* O Header do DefaultLayout já tem a Imagem e o Botão Nova Transacao (NewButton) */}
+            <Outlet context={{carregarTransacoes: carregarDados}}/>
             
-            {/* 1. Cards (Recebem o resumo calculado e são renderizados após o header) */}
-            <Cards />
+            {/* Box Sticky (Fixo no topo) */}
+            <Box sx={{
+                position: 'sticky',
+                top: 0, 
+                zIndex: 10,
+                bgcolor: 'background.default', 
+                pt: 1, 
+                pb: 2,
+                mt: -2 
+            }}>
+                {/* AQUI ESTAVA O ERRO PROVAVELMENTE: */}
+                {/* Passamos o estado 'resumoDados' para a prop 'resumo' */}
+                <Cards resumo={resumoDados}/>
+                
+                <Box sx={{ mt: 2 }}>
+                    <Search filtro={filtro} setFiltro={setFiltro} />
+                </Box>
+            </Box>
 
-            {/* 2. Search (Recebe o estado e a função de atualização do filtro) */}
-            <Search filtro={filtro} setFiltro={setFiltro} />
-
-            {/* 3. Tabela (Recebe a lista de transações FILTRADAS) */}
             <TabelaTransacoes 
                 transacoes={transacoesFiltradas} 
                 onDelete={handleDeleteTransacao} 
-                //onEdit={handleEditTransacao}//
             />
+
             <Stack spacing={2} sx={{ alignItems: 'center', mt: 4, mb: 2 }}>
-                
                 <Pagination 
                     count={totalPaginas || 1} 
                     page={paginaAtual} 
-                    onChange={(_, value) => {
-                        console.log("Página selecionada:", value);
-                        carregarTransacoes(value)}} // Ao clicar, carrega a nova página
+                    onChange={(_, value) => carregarDados(value)} 
                     color="primary"
                     shape="rounded"
-                    // Estilização para ficar visível no fundo escuro/cinza
                     sx={{
                         '& .MuiPaginationItem-root': {
-                            color: 'text.secondary', // ou '#fff' se estiver muito escuro
+                            color: 'text.secondary', 
                             '&.Mui-selected': {
                                 backgroundColor: 'primary.main',
                                 color: '#fff'
