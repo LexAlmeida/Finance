@@ -20,8 +20,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const warningTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const logoutTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-    const TOTAL_TIME = 1 * 60 * 1000; // 1 min
-    const WARNING_TIME = 50 * 1000; // 50 sec
+    const TOTAL_TIME = 10 * 60 * 1000; // 1 min
+    const WARNING_TIME = 9.5 * 60 * 1000; // 50 sec
 
     const clearTimers = () => {
         if (warningTimeoutRef.current) clearTimeout(warningTimeoutRef.current);
