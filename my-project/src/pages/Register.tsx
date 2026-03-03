@@ -5,36 +5,36 @@ import SavingsIcon from '@mui/icons-material/Savings';
 import EmailIcon from '@mui/icons-material/Email';
 import LockIcon from '@mui/icons-material/Lock';
 import { cadastrarUsuario } from "../shared/services/post/users";
+import { useForm } from "react-hook-form";
 
 
 export const Register = () => {
     const navigate = useNavigate();
+    const [registerError, setRegisterError] = useState<string | null>(null);
 
-    const [loginInput, setLoginInput] = useState('');
-    const [senhaInput, setSenhaInput] = useState('');
-    const [erro, setErro] = useState(false);
-
-    const handleRegister = async () => {
-        const loginLimpo = loginInput.trim()
-        const senhaLimpa = senhaInput.trim(); 
-
-        if(!loginLimpo || !senhaLimpa){
-          alert("Por favor, preencha todos os campos.");
-          return;
+    const {
+        register,
+        handleSubmit,
+        formState: {errors, isSubmitting},
+    } = useForm({
+        defaultValues:{
+            email: '',
+            password:''
         }
+    })
 
+    const onSubmit = async (data: any) => {
         try{
-            setErro(false);
+            setRegisterError(null);
 
-            await cadastrarUsuario(loginLimpo, senhaLimpa);
+            await cadastrarUsuario(data.email.trim(), data.password.trim());
 
             alert("Conta criada com sucesso! Faça login para continuar.");
 
             navigate('/login');
         } catch (error: any) {
-            setErro(true);
-            const mensagemErro = error.response?.data?.erro || "Erro ao criar conta.";
-            alert(mensagemErro);
+            const message = error.response?.data?.erro || "Erro ao criar conta.";
+            setRegisterError(message);
         }
     };
 
@@ -77,19 +77,24 @@ export const Register = () => {
                 <Stack spacing={3}>
                     <TextField
                         fullWidth
-                        label="Usuário"
-                        variant="outlined"
-                        placeholder="Escolha um nome de usuário"
-                        value={loginInput} 
-                        onChange={(e) => setLoginInput(e.target.value)} 
-                        
-                        error={erro} 
+                        label="email"
+                        placeholder="Digite seu melhor email"
+                        {...register('email', {
+                            required: "O e-mail é obrigatório",
+                            pattern:{
+                                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                                message: "Endereco de email invalido"
+                            }
+                        })}
+
+                        error={!!errors.email || !!registerError}
+                        helperText={(errors.email?.message as string) || (registerError ? "Não foi possível realizar o cadastro." : "")} 
                         
                         InputLabelProps={{ style: { color: '#7c7c8a' } }}
                         InputProps={{
                             startAdornment: (
                                 <InputAdornment position="start">
-                                    <EmailIcon sx={{ color: erro ? 'secondary.main' : '#00B37E' }} /> 
+                                    <EmailIcon sx={{ color: (errors.email || registerError) ? 'secondary.main' : '#00B37E' }} /> 
                                 </InputAdornment>
                             ),
                             sx: {
@@ -108,17 +113,18 @@ export const Register = () => {
                         type="password"
                         variant="outlined"
                         placeholder= "Crie uma senha segura"
-                        value={senhaInput} 
-                        onChange={(e) => setSenhaInput(e.target.value)} 
-                        
-                        error={erro} 
-                        helperText={erro ? "Não foi possível realizar o cadastro." : ""} 
+                        {...register('password', {
+                            required: 'A senha é obrigatória',
+                            minLength: {value: 6, message:"A senha deve conter no minimo 6 caracteres."}
+                        })}
+                        error={!!errors.password || !!registerError} 
+                        helperText={(errors.password?.message as string) || (registerError ? "Não foi possível realizar o cadastro." : "")} 
                         
                         InputLabelProps={{ style: { color: '#7c7c8a' } }}
                         InputProps={{
                             startAdornment: (
                                 <InputAdornment position="start">
-                                    <LockIcon sx={{ color: erro ? 'secondary.main' : 'primary.main' }} />
+                                    <LockIcon sx={{ color: (errors.password || registerError) ? 'secondary.main' : 'primary.main' }} />
                                 </InputAdornment>
                             ),
                             sx: {
@@ -132,9 +138,10 @@ export const Register = () => {
                     />
 
                     <Button
+                        type="submit"
                         variant="contained"
                         fullWidth
-                        onClick={handleRegister}
+                        onClick={handleSubmit(onSubmit)}
                         sx={{
                             backgroundColor: 'primary.light',
                             color: 'white',
@@ -145,7 +152,7 @@ export const Register = () => {
                             }
                         }}
                     >
-                        CADASTRAR
+                        {isSubmitting ? "CADASTRANDO..." : "CADASTRAR"}
                     </Button>
                 </Stack>
 

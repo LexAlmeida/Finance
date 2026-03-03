@@ -109,7 +109,6 @@ export const Finance = ({setCarregarTransacoes}: {setCarregarTransacoes: (fn: ()
         <BoxPrincipal>
             <Outlet context={{carregarTransacoes: carregarDados}}/>
             
-            {/* Box Sticky (Fixo no topo) */}
             <Box sx={{
                 position: 'sticky',
                 top: 0, 
@@ -119,8 +118,6 @@ export const Finance = ({setCarregarTransacoes}: {setCarregarTransacoes: (fn: ()
                 pb: 2,
                 mt: -2 
             }}>
-                {/* AQUI ESTAVA O ERRO PROVAVELMENTE: */}
-                {/* Passamos o estado 'resumoDados' para a prop 'resumo' */}
                 <Cards resumo={resumoDados}/>
                 
                 <Box sx={{ mt: 2 }}>
