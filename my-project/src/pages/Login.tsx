@@ -5,7 +5,7 @@ import { useState } from "react";
 import SavingsIcon from '@mui/icons-material/Savings';
 import EmailIcon from '@mui/icons-material/Email';
 import LockIcon from '@mui/icons-material/Lock';
-import { loginService } from "../shared/services/post/auth";
+import { loginService } from "../shared/services/auth";
 import { useAuth } from "../shared/context/AuthContext";
 
 export const Login = () => {

@@ -4,7 +4,7 @@ import { useState } from "react";
 import SavingsIcon from '@mui/icons-material/Savings';
 import EmailIcon from '@mui/icons-material/Email';
 import LockIcon from '@mui/icons-material/Lock';
-import { cadastrarUsuario } from "../shared/services/post/users";
+import { cadastrarUsuario } from "../shared/services/users";
 import { useForm } from "react-hook-form";
 
 

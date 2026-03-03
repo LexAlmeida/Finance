@@ -3,7 +3,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { Button, Dialog, DialogContent, DialogTitle, IconButton, Stack } from "@mui/material";
 import { useState } from "react";
 import { BoxInputs } from '../Box/BoxInputs';
-import { createTransaction } from '../../services/post/transactions';
+import { createTransaction } from '../../services/transactions';
 
 interface InputState {
     nome: string;

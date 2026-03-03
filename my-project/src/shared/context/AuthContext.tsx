@@ -2,7 +2,7 @@ import React, { createContext, useContext, useEffect, useRef, useState } from 'r
 import { useNavigate } from 'react-router-dom';
 import { Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@mui/material';
 import { api } from '../services/api';
-import { refreshToken } from '../services/post/auth';
+import { refreshToken } from '../services/auth';
 
 interface AuthContextData {
     isAuthenticated: boolean;

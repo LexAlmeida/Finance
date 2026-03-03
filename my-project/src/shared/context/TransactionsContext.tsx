@@ -5,7 +5,7 @@ import {
     getTransactions, 
     type Transaction, 
     type ResumoTransacoes 
-} from '../services/get/transactions';
+} from '../services/transactions';
 
 interface TransactionsContextData {
     transacoes: Transaction[];

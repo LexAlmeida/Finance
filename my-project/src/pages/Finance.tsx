@@ -1,12 +1,12 @@
 import { useEffect, useState, useMemo, useCallback } from "react";
 import { Stack, Pagination, Box } from "@mui/material"; 
 import { Cards } from "../shared/components/Cards/Cards";
-import { BoxPrincipal } from "../shared/components/Box/Box";
+import { BoxPrincipal } from "../shared/components/Box/BoxPrincipal";
 import { Search } from "../shared/components/Inputs/Search";
 import { TabelaTransacoes } from "../shared/components/Tabela/Tabela";
 import { type ITransacao } from "../shared/components/Tabela/Tabela"; 
-import { getTransactions } from "../shared/services/get/transactions";
-import { deleteTransaction } from "../shared/services/delete/transactions";
+import { getTransactions } from "../shared/services/transactions";
+import { deleteTransaction } from "../shared/services/transactions";
 import { Outlet } from "react-router-dom";
 
 // Interface do estado do resumo

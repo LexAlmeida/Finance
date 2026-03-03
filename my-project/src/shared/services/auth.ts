@@ -1,4 +1,4 @@
-import { api } from "../api";
+import { api } from "./api";
 
 // Interface para organizar o que a API devolve
 interface LoginResponse {
