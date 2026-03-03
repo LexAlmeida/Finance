@@ -1,5 +1,5 @@
 import { Box, TextField } from "@mui/material"
-import { ButtonSearch } from "../Button/Button" // Seu componente de botão
+import { ButtonSearch } from "../Button/Button"
 
 interface SearchProps {
     filtro: string;
@@ -20,11 +20,10 @@ export const Search = ({ filtro, setFiltro }: SearchProps) => {
                 variant="filled"
                 id="buscar-transacao"
                 label="Buscar uma transação"
-                value={filtro} // <--- Agora controlado pelo estado do Finance
-                onChange={(e) => setFiltro(e.target.value)} // <--- Atualiza o estado do Finance
+                value={filtro} 
+                onChange={(e) => setFiltro(e.target.value)}
                 sx={{flex:'1'}}
             />
-            {/* O ButtonSearch pode ser alterado para ser um Button normal com type="submit" */}
             <ButtonSearch/> 
         </Box>
     )

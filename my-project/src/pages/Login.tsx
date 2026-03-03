@@ -1,5 +1,6 @@
 import { Box, Button, Paper, Stack, TextField, Typography, InputAdornment, Link } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
 import { useState } from "react";
 import SavingsIcon from '@mui/icons-material/Savings';
 import EmailIcon from '@mui/icons-material/Email';
@@ -10,32 +11,32 @@ import { useAuth } from "../shared/context/AuthContext";
 export const Login = () => {
     const navigate = useNavigate();
     const { loginSuccess } = useAuth();
+    const [loginError, setLoginError] = useState<string|null>(null);
 
-    const [loginInput, setLoginInput] = useState('');
-    const [senhaInput, setSenhaInput] = useState('');
+    const {
+        register,
+        handleSubmit,
+        formState: { errors, isSubmitting},
+    } = useForm({
+        defaultValues: {
+            email: '',
+            password: ''
+        }
+    })
     
-    const [erro, setErro] = useState(false);
+    const onSubmit = async (data: any) => {
+        try {
+            setLoginError(null);
+            const response = await loginService(data.email, data.password);
 
-    const handleLogin = async () => {
-        try{
-            setErro(false);
-            const data = await loginService(loginInput, senhaInput);
-            
-            console.log('Resposta completa do login:', data);
-
-            loginSuccess(
-                data.token,
-                data.refreshToken,
-                data.usuario
-            );
-
-            navigate('/pagina-inicial');
-        } catch (error: any) {
-            setErro(true);
-            console.error("Erro no login:", error);
-            alert(error.response?.data?.erro || "Erro no Login.");
-        };
-    };
+            loginSuccess(response.token, response.refreshToken,response.usuario);
+            navigate("/pagina-inicial")
+        }
+        catch(error: any){
+            const message = error.response?.data?.erro || "Erro ao realizar o login";
+            setLoginError(message)
+        }
+    }
 
     return (
         <Box
@@ -73,22 +74,25 @@ export const Login = () => {
                 </Stack>
 
                 {/* Formulário */}
-                <Stack spacing={3}>
+                <Stack component='form'
+                    onSubmit={handleSubmit(onSubmit)} spacing={3}>
                     <TextField
                         fullWidth
-                        label="E-mail"
-                        variant="outlined"
-                        placeholder="exemplo@finance.com"
-                        value={loginInput} 
-                        onChange={(e) => setLoginInput(e.target.value)} 
-                        
-                        error={erro} 
+                        {...register("email", {
+                            required: "O email é obrigatório",
+                            pattern:{
+                                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                                message: "Endereco de email invalido"
+                            }
+                        })}
+                        error={!!errors.email || !!loginError}
+                        helperText={errors.email?.message as string} 
                         
                         InputLabelProps={{ style: { color: '#7c7c8a' } }}
                         InputProps={{
                             startAdornment: (
                                 <InputAdornment position="start">
-                                    <EmailIcon sx={{ color: erro ? 'secondary.main' : '#00B37E' }} /> 
+                                    <EmailIcon sx={{ color: (errors.email || loginError) ? 'secondary.main' : '#00B37E' }} /> 
                                 </InputAdornment>
                             ),
                             sx: {
@@ -105,19 +109,19 @@ export const Login = () => {
                         fullWidth
                         label="Senha"
                         type="password"
-                        variant="outlined"
-                        placeholder="********"
-                        value={senhaInput} 
-                        onChange={(e) => setSenhaInput(e.target.value)} 
+                        {...register("password", {
+                            required: "A senha é obrigatória",
+                            minLength: {value: 4, message: `A senha deve ter no minimo 6 caracteres`}
+                        })}
                         
-                        error={erro} 
-                        helperText={erro ? "Usuário ou senha inválidos." : ""} 
+                        error={!!errors.password || !!loginError} 
+                        helperText={(errors.password?.message as string) || (loginError ? "Usuário ou senha inválidos." : "")} 
                         
                         InputLabelProps={{ style: { color: '#7c7c8a' } }}
                         InputProps={{
                             startAdornment: (
                                 <InputAdornment position="start">
-                                    <LockIcon sx={{ color: erro ? 'secondary.main' : 'primary.main' }} />
+                                    <LockIcon sx={{ color: (errors.password || loginError) ? 'secondary.main' : 'primary.main' }} />
                                 </InputAdornment>
                             ),
                             sx: {
@@ -131,9 +135,10 @@ export const Login = () => {
                     />
 
                     <Button
+                        type="submit"
                         variant="contained"
                         fullWidth
-                        onClick={handleLogin}
+                        disabled={isSubmitting}
                         sx={{
                             backgroundColor: 'primary.light',
                             color: 'white',
@@ -144,7 +149,7 @@ export const Login = () => {
                             }
                         }}
                     >
-                        ENTRAR
+                        {isSubmitting ? "CARREGANDO" : "ENTRAR"}
                     </Button>
                 </Stack>
                 <Stack direction="row" justifyContent="center" sx={{ mt: 3 }}>
