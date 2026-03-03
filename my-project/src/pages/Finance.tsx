@@ -1,8 +1,8 @@
 import { useEffect, useState, useMemo, useCallback } from "react";
 import { Stack, Pagination, Box } from "@mui/material"; 
 import { Cards } from "../shared/components/Cards/Cards";
-import { BoxPrincipal } from "../shared/components/Box/BoxPrincipal";
-import { Search } from "../shared/components/Inputs/Search";
+import { BoxPrincipal } from "../shared/components/Box";
+import { Search } from "../shared/components/Box/InputSearch";
 import { TabelaTransacoes } from "../shared/components/Tabela/Tabela";
 import { type ITransacao } from "../shared/components/Tabela/Tabela"; 
 import { getTransactions } from "../shared/services/transactions";

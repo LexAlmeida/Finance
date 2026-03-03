@@ -1,5 +1,5 @@
 import { Box, TextField } from "@mui/material"
-import { ButtonSearch } from "../Button/Button"
+import { ButtonSearch } from "../Button"
 
 interface SearchProps {
     filtro: string;

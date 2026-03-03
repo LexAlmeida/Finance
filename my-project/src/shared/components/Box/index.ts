@@ -1,2 +1,3 @@
 export * from './BoxPrincipal';
-export * from './BoxInputs';
+export * from './InputsDialog';
+export * from './InputSearch';

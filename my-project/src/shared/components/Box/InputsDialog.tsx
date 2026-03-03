@@ -1,5 +1,5 @@
 import { Box, TextField } from "@mui/material";
-import { ButtonAction, ButtonRegister } from "../Button/Button";
+import { ButtonAction, ButtonRegister } from "../Button";
 import { useForm } from "react-hook-form";
 
 interface IBoxInputs {

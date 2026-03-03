@@ -1,13 +1,10 @@
 import { Box, Button } from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
-import { NovaTransacao } from "../Dialog/NovaTransacao";
+import { NovaTransacao } from "../Dialog";
 
 interface IButtonAction {
     tipoSelecionado: 'entrada'|'saida'|null;
     setTipoSelecionado: React.Dispatch<React.SetStateAction<'entrada'|'saida'|null>>;
-}
-interface IButtonRegister {
-    handleCadastro: () => void;
 }
 
 export const NewButton = ({carregarTransacoes}: {carregarTransacoes: () => void}) => {

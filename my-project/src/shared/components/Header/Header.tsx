@@ -1,6 +1,6 @@
 import { Box } from "@mui/material"
 import React from "react"
-import { NewButton } from "../Button/Button"
+import { NewButton } from "../Button"
 
 const MAX_CONTENT_WIDTH="1120px"
 
