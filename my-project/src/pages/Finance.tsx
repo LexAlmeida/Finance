@@ -121,7 +121,7 @@ export const Finance = ({setCarregarTransacoes}: {setCarregarTransacoes: (fn: ()
                 <Cards resumo={resumoDados}/>
                 
                 <Box sx={{ mt: 2 }}>
-                    <Search filtro={filtro} setFiltro={setFiltro} />
+                    <Search setFiltro={setFiltro} />
                 </Box>
             </Box>
 

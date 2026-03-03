@@ -14,11 +14,8 @@ export const NewButton = ({carregarTransacoes}: {carregarTransacoes: () => void}
 }
 
 export const ButtonSearch = () => {
-    function handleClick(){
-        alert('buscando');
-    }
     return (
-        <Button onClick={handleClick} startIcon={<SearchIcon/>}>
+        <Button type='submit' startIcon={<SearchIcon/>}>
             Buscar
         </Button>
     )
