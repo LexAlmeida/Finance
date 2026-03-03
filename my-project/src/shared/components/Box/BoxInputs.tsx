@@ -1,6 +1,6 @@
 import { Box, TextField } from "@mui/material";
-import { useState } from "react";
 import { ButtonAction, ButtonRegister } from "../Button/Button";
+import { useForm } from "react-hook-form";
 
 interface IBoxInputs {
     onSave:(inputs: InputState) => Promise<boolean> | boolean;
@@ -14,63 +14,60 @@ interface InputState {
 }
 
 export const BoxInputs = ({onSave, tipoSelecionado, setTipoSelecionado}: IBoxInputs) => {
-    const [inputs, setInputs] = useState<InputState>({
-        nome:'',
-        valor:'',
-        categoria:''
+    const {register, handleSubmit, reset, formState: {errors}} = useForm<InputState>({
+        defaultValues:{
+            nome:'',
+            valor:'',
+            categoria:''
+        }
     });
 
-    const handleCadastro = () => {
-        const salvou = onSave(inputs);
-        if(isNaN(parseFloat(inputs.valor))){
+    const onSubmit = async(data: any) => {
+        if(isNaN(parseFloat(data.valor))){
             alert("Por favor, insira um valor numérico válido para o preço.");
             return;
         }
+
+        const salvou = await onSave(data)
         if(salvou){
-            setInputs({
-                nome:'',
-                valor:'',
-                categoria:'',
-            })
+            reset();
+            setTipoSelecionado(null);
         }
-        setTipoSelecionado(null);
     }
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const {id,value} = e.target;
-        setInputs(prevInputs => ({
-            ...prevInputs,
-            [id]: value,
-        }));
-    };
-
     return (
-        <Box display='flex' flexDirection='column'>
+        <Box 
+            component='form' 
+            onSubmit={handleSubmit(onSubmit)}
+            display='flex' 
+            flexDirection='column'
+        >
             <TextField 
+                {...register('nome', {required: 'A Descrição é obrigatória'})}
                 variant="filled" 
                 fullWidth
-                id="nome" 
                 label="Descrição"
-                value={inputs.nome}
+                error={!!errors.nome}
+                helperText={errors.nome?.message}
                 sx={{mb:'15px'}}
-                onChange={handleChange}></TextField>
+            />
             <TextField 
+                {...register('valor', {required: 'O Preço é obrigatório'})} 
                 variant="filled" 
                 fullWidth
-                id="valor"
                 label="Preço" 
-                value={inputs.valor}
-                sx={{mb:'15px'}}
-                onChange={handleChange}></TextField>
+                error={!!errors.valor}
+                helperText={errors.valor?.message}
+                sx={{mb:'15px'}}/>
             <TextField 
+                {...register('categoria', {required: 'A Categoria é obrigatória'})}
                 variant="filled" 
                 fullWidth
-                id="categoria" 
                 label="Categoria" 
-                sx={{mb:'15px'}}
-                onChange={handleChange} ></TextField>
+                error={!!errors.categoria}
+                helperText={errors.categoria?.message}
+                sx={{mb:'15px'}}/>
             <ButtonAction tipoSelecionado={tipoSelecionado} setTipoSelecionado={setTipoSelecionado}/>
-            <ButtonRegister handleCadastro={handleCadastro}/>
+            <ButtonRegister/>
         </Box>
     )
 }

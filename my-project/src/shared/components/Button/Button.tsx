@@ -48,12 +48,12 @@ export const ButtonAction = ({tipoSelecionado, setTipoSelecionado}: IButtonActio
     )
 }
 
-export const ButtonRegister = ({handleCadastro}: IButtonRegister) => {
+export const ButtonRegister = () => {
     return (
         <Button
+        type="submit"
             variant="contained"
             color="primary"
-            onClick={handleCadastro}
             fullWidth
             sx={{mt:3}}>
                 Cadastrar
