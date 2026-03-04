@@ -1,7 +1,7 @@
 import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp';
 import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
-import { Box, Card, Stack, Typography } from '@mui/material';
+import { Box, Card, Typography } from '@mui/material';
 
 // Interfaces para Props 
 interface ICard {
@@ -32,7 +32,7 @@ const IconMap: {[key: string]: React.ElementType} = {
     money: AttachMoneyIcon
 }
 
-// Sub-Componente de Card 
+// Sub componente de Card 
 const MyCard = ({title, value, icon, isHighlight}: ICard) => {
     const IconComponent = IconMap[icon];
     
@@ -43,14 +43,15 @@ const MyCard = ({title, value, icon, isHighlight}: ICard) => {
 
     return (
         <Card sx={{
-            width:{xs: '100%', sm: '27.5rem'}, 
+            minWidth:{xs:'280px', sm: '300px'}, 
+            flexShrink:0,
             borderRadius: "6px",
             mb: {xs:2, sm:0},
             bgcolor: bgColor,
             color: isHighlight ? 'contrastText' : 'text.secondary', 
             p: 4
         }}>
-            <Box display={"flex"} justifyContent='space-between'>
+            <Box display="flex" justifyContent='space-between'>
                 <Typography variant="h6">{title}</Typography>
                 <IconComponent sx={{ color: isHighlight ? 'contrastText' : iconColor }}/>
             </Box>
@@ -72,10 +73,17 @@ const MyCard = ({title, value, icon, isHighlight}: ICard) => {
 // Componente Principal Cards 
 export const Cards = ({ resumo }: CardProps ) => {
     return (
-            <Stack direction='row' spacing={{xs:0,sm:2}} justifyContent='center' gap={2} sx={{
-                // Ajuste de margem 
-                mt: { xs: 0, sm: -5 } 
-            }}>
+            <Box
+                sx={{
+                    display:'flex',
+                    gap: 2,
+                    mt: { xs: -10, sm: -5 },
+                    overflowX:'auto',
+                    pb: 1,
+                    '&::-webkit-scrollbar': {display: 'none'},
+                    justifyContent: {xs: 'flex-start', sm: 'space-between'}
+                }}
+            >
                 <MyCard
                     title="Entrada"
                     value={formatarPreco(resumo.entradas)}
@@ -92,8 +100,8 @@ export const Cards = ({ resumo }: CardProps ) => {
                     title="Total"
                     value={formatarPreco(resumo.total)}
                     icon="money"
-                    isHighlight={true} // Este card é o verde de destaque
+                    isHighlight={true} //card verde de destaque
                 />
-            </Stack>
+            </Box>
     )
 }
