@@ -1,10 +1,10 @@
 import { useEffect, useState, useMemo, useCallback } from "react";
 import { Stack, Pagination, Box } from "@mui/material"; 
-import { Cards } from "../shared/components/Cards/Cards";
+import { Cards } from "../shared/components/Cards";
 import { BoxPrincipal } from "../shared/components/Box";
-import { Search } from "../shared/components/Box/InputSearch";
-import { TabelaTransacoes } from "../shared/components/Tabela/Tabela";
-import { type ITransacao } from "../shared/components/Tabela/Tabela"; 
+import { Search } from "../shared/components/Box";          
+import { TabelaTransacoes } from "../shared/components/Tabela";
+import { type ITransacao } from "../shared/components/Tabela"; 
 import { getTransactions } from "../shared/services/transactions";
 import { deleteTransaction } from "../shared/services/transactions";
 import { Outlet } from "react-router-dom";

@@ -79,11 +79,7 @@ export const Login = () => {
                     <TextField
                         fullWidth
                         {...register("email", {
-                            required: "O email é obrigatório",
-                            pattern:{
-                                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                                message: "Endereco de email invalido"
-                            }
+                            required: "O email é obrigatório"
                         })}
                         error={!!errors.email || !!loginError}
                         helperText={errors.email?.message as string} 
