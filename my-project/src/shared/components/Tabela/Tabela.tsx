@@ -27,106 +27,97 @@ const formatarValor = (valor: number): string => {
     }).format(Math.abs(valor))
 }
 
+const LinhaTransacao = ({transacao, onDelete}: {
+    transacao: ITransacao,
+    onDelete?: (id: number) => void
+}) => {
+    const isSaida = transacao.tipo === 'saida';
+    const styles = {
+        color: isSaida ? 'secondary.main' : 'primary.light',
+        border: isSaida ? '#015f43' : '#aa2834',
+        prefix: isSaida ? '-' : ''
+    };
+    const valorFormatado =  new Intl.NumberFormat('pt-br', {
+        style:'currency',
+        currency: 'BRL'
+    }).format(Math.abs(transacao.valor));
+
+    return (
+        <TableRow
+            sx={{
+                '&:hover': {bgcolor:'action.hover'},
+                transition: 'background-color 0.3s',
+            }}    
+        >
+            <TableCell
+                sx={{
+                    color: 'text.primary',
+                    borderBottom: `1px solid ${styles.border}`,
+                    py: 2.5
+                }}
+            >
+                {transacao.nome}
+            </TableCell>
+
+            <TableCell 
+                sx={{
+                    color: styles.color,
+                    fontWeight: 'bold',
+                    borderBottom: `1px solid ${styles.border}`
+                }}
+            >
+                {styles.prefix}{valorFormatado}
+            </TableCell>
+
+            <TableCell
+                sx={{
+                    color: 'text.primary',
+                    borderBottom: `1px solid ${styles.border}`,
+                    whiteSpace:'nowrap'
+                }}
+            >
+                {transacao.data}
+            </TableCell>
+
+            <TableCell align="right" sx={{borderBottom: `1px solid ${styles.border}`}}>
+                <Stack direction='row' spacing={1} justifyContent='flex-end'>
+                    <Tooltip title='Editar'>
+                        <IconButton size="small" sx={{color: 'primary.dark'}}>
+                            <EditIcon fontSize="small"/>
+                        </IconButton>
+                    </Tooltip>
+                    <Tooltip title='Deletar'>
+                        <IconButton 
+                            size="small" 
+                            sx={{color: 'text.disabled', 
+                                '&:hover': {color:'secondary.main'}
+                            }}
+                            onClick={() => onDelete?.(transacao.id)}
+                        >
+                            <DeleteIcon fontSize="small"/>
+                        </IconButton>
+                    </Tooltip>
+                </Stack>
+            </TableCell>
+        </TableRow>
+    );
+};
+
 export const TabelaTransacoes = ({ transacoes, onDelete }: TabelaProps) => {
     return (
-        <TableContainer component={Paper} sx={{mt:4, borderRadius:'6px', bgcolor:'background.default'}}>
-            <Table sx={{minWidth:'650px'}} aria-label="simple table">
+        <TableContainer 
+            component={Paper} 
+            sx={{mt:4, borderRadius:'6px', bgcolor:'background.default'}}
+        >
+            <Table sx={{minWidth:{xs: '700px', md:'100%'}}} aria-label="simple table">
                 <TableBody>
-                    {transacoes.map((transacao) => {
-                        const isSaida = transacao.tipo === 'saida';
-                        const tipo = isSaida ? 'saida' : 'entrada';
-                        // Define as cores CSS de acordo com o tema
-                        const borderColor = tipo === 'entrada' ? '#015f43' : '#aa2834';
-                        
-                        return (
-                            <TableRow 
-                                key={transacao.id} 
-                                sx={{
-                                    '&:last-child td, &:last-child th':{border:0}, 
-                                    '&:hover': { bgcolor: 'background.paper' },
-                                    transition: 'background-color 0.3s',
-                                }}
-                            >
-                                {/*descrição*/}
-                                <TableCell 
-                                    component='th' 
-                                    scope="row"
-                                    sx={{
-                                        color: 'text.primary', 
-                                        borderBottom: `1px solid ${borderColor}`,
-                                        py: 2.5,
-                                        fontSize: '1rem',
-                                    }}
-                                >
-                                    {transacao.nome}
-                                </TableCell>
-
-                                {/*preco*/}
-                                <TableCell sx={{
-                                    color: tipo === 'entrada' ? 'primary.light' : 'secondary.main',
-                                    fontWeight:'bold',
-                                    borderBottom: `1px solid ${borderColor}`,
-                                    whiteSpace: 'nowrap',
-                                    fontSize: '1rem',
-                                    py: 2.5,
-                                }}>
-                                    {tipo === 'saida' ? '- ' : ''} 
-                                    {formatarValor(transacao.valor)}
-                                </TableCell>
-
-                                {/*categoria*/}
-                                <TableCell sx={{
-                                    color: 'text.primary', 
-                                    borderBottom: `1px solid ${borderColor}`,
-                                    py: 2.5,
-                                }}>
-                                    {transacao.categoria}
-                                </TableCell> 
-
-                                {/*data*/}      
-                                <TableCell sx={{
-                                    color: 'text.primary', 
-                                    borderBottom: `1px solid ${borderColor}`,
-                                    whiteSpace: 'nowrap',
-                                    py: 2.5,
-                                }}>
-                                    {transacao.data}
-                                </TableCell>  
-
-                                {/*ações editar e deletar*/}
-                                <TableCell align="right" sx={{
-                                    borderBottom:`1px solid ${borderColor}`,
-                                    py: 2.5,
-                                }}>
-                                    <Stack direction="row" spacing={1} justifyContent="flex-end">
-                                        <Tooltip title="Editar">
-                                            <IconButton
-                                                //onClick={() => onEdit?.(transacao)}//
-                                                sx={{
-                                                    color: 'primary.dark',
-                                                    "&:hover": { color: 'primary.main', backgroundColor: 'rgba(0, 179, 126, 0.1)'}
-                                                }}>
-                                                <EditIcon fontSize="small" />
-                                            </IconButton>
-                                        </Tooltip>
-                                        <Tooltip title="Deletar">
-                                            <IconButton 
-                                                onClick={() => onDelete?.(transacao.id)}
-                                                sx={{
-                                                    color:'#565658', 
-                                                    "&:hover": {color: 'secondary.main', backgroundColor: 'rgba(247, 90, 104, 0.1)'}}}>
-                                                <DeleteIcon fontSize="small" />
-                                            </IconButton>
-                                        </Tooltip>
-                                    </Stack>
-                                    
-                                </TableCell>                     
-                            </TableRow>
-                        );
-                    })}
-                    {transacoes.length === 0 && (
+                    {transacoes.length > 0 ? (
+                        transacoes.map((t) => (
+                            <LinhaTransacao key={t.id} transacao={t} onDelete={onDelete}/>
+                        ))
+                    ) : (
                         <TableRow>
-                             <TableCell colSpan={5} align="center" sx={{ color: 'text.primary' }}>
+                            <TableCell colSpan={5} align="center" sx={{py: 10, color: 'text.secondary'}}>
                                 Nenhuma transação encontrada.
                             </TableCell>
                         </TableRow>
