@@ -39,11 +39,11 @@ const MyCard = ({title, value, icon, isHighlight}: ICard) => {
     // Define a cor do ícone 
     const iconColor = isHighlight ? 'text.secondary' : (title === 'Entrada' ? 'primary.light' : 'secondary.main');
     
-    const bgColor = isHighlight ? 'primary.main' : 'background.default';
+    const bgColor = isHighlight ? 'primary.dark' : 'background.paper';
 
     return (
         <Card sx={{
-            minWidth:{xs:'280px', sm: '300px'}, 
+            minWidth:{xs:'280px', sm: '350px'}, 
             flexShrink:0,
             borderRadius: "6px",
             mb: {xs:2, sm:0},
@@ -60,8 +60,8 @@ const MyCard = ({title, value, icon, isHighlight}: ICard) => {
                 fontWeight='bold'
                 sx={{ mt: 1, 
                       color: isHighlight ? 'contrastText' : 
-                      (title === 'Entrada' ? 'primary.light' : 
-                       (title === 'Saída' ? 'secondary.main' : 'text.secondary'))
+                      (title === 'Entrada' ? 'text.primary' : 
+                       (title === 'Saída' ? 'text.primary' : 'text.secondary'))
                 }}
             >
                 {value}

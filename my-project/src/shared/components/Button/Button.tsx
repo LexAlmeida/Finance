@@ -1,4 +1,4 @@
-import { Box, Button } from "@mui/material";
+import { Box, Button, useMediaQuery, useTheme } from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
 import { NovaTransacao } from "../Dialog";
 
@@ -14,9 +14,12 @@ export const NewButton = ({carregarTransacoes}: {carregarTransacoes: () => void}
 }
 
 export const ButtonSearch = () => {
+    const theme = useTheme();
+
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
     return (
         <Button type='submit' startIcon={<SearchIcon/>}>
-            Buscar
+            {isMobile ? "" : 'Buscar'}
         </Button>
     )
 }
