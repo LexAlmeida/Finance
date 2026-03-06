@@ -1,13 +1,15 @@
-
 import { Box } from '@mui/material';
 import { MyCard } from './MyCards';
+import type { ITransacao } from '../Tabela';
+import { getUltimaData } from '../../services/utils';
 
 interface CardProps {
     resumo: {
         total: number;
         entradas: number;
         saidas: number;
-    }
+    };
+    transacoes: ITransacao[]
 }
 
 const formatarPreco = (preco: number): string => {
@@ -17,7 +19,11 @@ const formatarPreco = (preco: number): string => {
     }).format(preco)
 }
 
-export const Cards = ({ resumo }: CardProps ) => {
+export const Cards = ({ resumo, transacoes = [] }: CardProps ) => {
+    const entrada = transacoes.filter(t => t.tipo === 'entrada').reduce((acc, t) => acc + t.valor, 0);
+    const saida = transacoes.filter(t => t.tipo === 'saida').reduce((acc, t) => acc + Math.abs(t.valor), 0);
+
+    const total = entrada - saida;
     return (
             <Box
                 sx={{
@@ -35,12 +41,14 @@ export const Cards = ({ resumo }: CardProps ) => {
                     value={formatarPreco(resumo.entradas)}
                     icon="arrowUp"
                     isHighlight={false}
+                    lastTransaction={getUltimaData(transacoes, 'entrada')}
                 />
                 <MyCard
                     title="Saída"
                     value={formatarPreco(resumo.saidas)}
                     icon="arrowDown"
                     isHighlight={false}
+                    lastTransaction={getUltimaData(transacoes, 'saida')}
                 />
                 <MyCard
                     title="Total"

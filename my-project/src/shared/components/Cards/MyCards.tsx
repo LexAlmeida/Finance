@@ -8,6 +8,7 @@ interface ICard {
     value: string;
     icon: string;
     isHighlight: boolean;
+    lastTransaction?: string;
 }
 
 const IconMap: {[key: string]: React.ElementType} = {
@@ -16,13 +17,13 @@ const IconMap: {[key: string]: React.ElementType} = {
     money: AttachMoneyIcon
 }
 
-export const MyCard = ({title, value, icon, isHighlight}: ICard) => {
+export const MyCard = ({title, value, icon, isHighlight, lastTransaction}: ICard) => {
     const IconComponent = IconMap[icon];
     
     // Define a cor do ícone 
     const iconColor = isHighlight ? 'text.secondary' : (title === 'Entrada' ? 'primary.light' : 'secondary.main');
-    
     const bgColor = isHighlight ? 'primary.dark' : 'background.paper';
+    const footerTextColor = !isHighlight ? 'text.primary' : 'text.disabled';
 
     return (
         <Card sx={{
@@ -49,6 +50,18 @@ export const MyCard = ({title, value, icon, isHighlight}: ICard) => {
             >
                 {value}
             </Typography>
+            {lastTransaction && (
+                <Typography
+                    variant="caption"
+                    sx={{
+                        display:'block',
+                        mt: 0.5,
+                        color: footerTextColor
+                    }}    
+                >
+                    {lastTransaction}
+                </Typography>
+            )}
         </Card>
     )
 }
