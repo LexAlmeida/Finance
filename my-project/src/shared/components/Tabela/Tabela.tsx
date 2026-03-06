@@ -2,7 +2,6 @@ import { Box, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableRo
 import { LinhaTransacao } from "./DesktopRow";
 import { CardMobile } from "./MobileCard";
 
-
 // Interface 
 export interface ITransacao { 
     id:number;
@@ -19,8 +18,6 @@ interface TabelaProps {
     onDelete?: (id: number) => void;
     onEdit?: (transacao: ITransacao) => void;
 }
-
-
 
 export const TabelaTransacoes = ({ transacoes, onDelete }: TabelaProps) => {
     const theme = useTheme();

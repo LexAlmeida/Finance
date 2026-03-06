@@ -1,29 +1,13 @@
+import { Box, Card, Typography } from "@mui/material";
 import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp';
 import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
-import { Box, Card, Typography } from '@mui/material';
 
-// Interfaces para Props 
 interface ICard {
     title: string;
     value: string;
     icon: string;
     isHighlight: boolean;
-}
-interface CardProps {
-    resumo: {
-        total: number;
-        entradas: number;
-        saidas: number;
-    }
-}
-
-// Funções Auxiliares
-const formatarPreco = (preco: number): string => {
-    return new Intl.NumberFormat('pt-br', {
-        style:'currency',
-        currency: 'BRL'
-    }).format(preco)
 }
 
 const IconMap: {[key: string]: React.ElementType} = {
@@ -32,8 +16,7 @@ const IconMap: {[key: string]: React.ElementType} = {
     money: AttachMoneyIcon
 }
 
-// Sub componente de Card 
-const MyCard = ({title, value, icon, isHighlight}: ICard) => {
+export const MyCard = ({title, value, icon, isHighlight}: ICard) => {
     const IconComponent = IconMap[icon];
     
     // Define a cor do ícone 
@@ -67,41 +50,5 @@ const MyCard = ({title, value, icon, isHighlight}: ICard) => {
                 {value}
             </Typography>
         </Card>
-    )
-}
-
-// Componente Principal Cards 
-export const Cards = ({ resumo }: CardProps ) => {
-    return (
-            <Box
-                sx={{
-                    display:'flex',
-                    gap: 2,
-                    mt: { xs: -10, sm: -5 },
-                    overflowX:'auto',
-                    pb: 1,
-                    '&::-webkit-scrollbar': {display: 'none'},
-                    justifyContent: {xs: 'flex-start', sm: 'space-between'}
-                }}
-            >
-                <MyCard
-                    title="Entrada"
-                    value={formatarPreco(resumo.entradas)}
-                    icon="arrowUp"
-                    isHighlight={false}
-                />
-                <MyCard
-                    title="Saída"
-                    value={formatarPreco(resumo.saidas)}
-                    icon="arrowDown"
-                    isHighlight={false}
-                />
-                <MyCard
-                    title="Total"
-                    value={formatarPreco(resumo.total)}
-                    icon="money"
-                    isHighlight={true} //card verde de destaque
-                />
-            </Box>
     )
 }
