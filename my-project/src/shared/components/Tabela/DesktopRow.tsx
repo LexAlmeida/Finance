@@ -49,6 +49,16 @@ export const LinhaTransacao = ({transacao, onDelete}: {
                 sx={{
                     color: 'text.primary',
                     borderBottom: `1px solid ${styles.border}`,
+                    py: 2.5
+                }}
+            >
+                {transacao.categoria}
+            </TableCell>
+
+            <TableCell
+                sx={{
+                    color: 'text.primary',
+                    borderBottom: `1px solid ${styles.border}`,
                     whiteSpace:'nowrap'
                 }}
             >

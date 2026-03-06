@@ -20,10 +20,6 @@ const formatarPreco = (preco: number): string => {
 }
 
 export const Cards = ({ resumo, transacoes = [] }: CardProps ) => {
-    const entrada = transacoes.filter(t => t.tipo === 'entrada').reduce((acc, t) => acc + t.valor, 0);
-    const saida = transacoes.filter(t => t.tipo === 'saida').reduce((acc, t) => acc + Math.abs(t.valor), 0);
-
-    const total = entrada - saida;
     return (
             <Box
                 sx={{
