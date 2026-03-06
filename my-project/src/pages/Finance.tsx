@@ -118,7 +118,7 @@ export const Finance = ({setCarregarTransacoes}: {setCarregarTransacoes: (fn: ()
                 pb: 2,
                 mt: -2 
             }}>
-                <Cards resumo={resumoDados}/>
+                <Cards resumo={resumoDados} transacoes={transacoesCompletas}/>
                 
                 <Box sx={{ mt: 2 }}>
                     <Search setFiltro={setFiltro} />

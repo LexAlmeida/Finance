@@ -55,6 +55,7 @@ export const Cards = ({ resumo, transacoes = [] }: CardProps ) => {
                     value={formatarPreco(resumo.total)}
                     icon="money"
                     isHighlight={true} //card verde de destaque
+                    lastTransaction={getUltimaData(transacoes)}
                 />
             </Box>
     )

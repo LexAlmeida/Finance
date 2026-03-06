@@ -18,7 +18,7 @@ export const CardMobile = ({transacao, onDelete}:{transacao:ITransacao, onDelete
             mb: 2,
             color: 'white'
         }}>
-            <Typography sx={{ color: '#e1e1e6', fontSize: '1rem', mb: 0.5 }}>
+            <Typography sx={{ color: 'text.primary', fontSize: '1rem', mb: 0.5 }}>
                 {transacao.nome}
             </Typography>
             

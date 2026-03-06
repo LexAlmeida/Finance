@@ -23,7 +23,7 @@ export const MyCard = ({title, value, icon, isHighlight, lastTransaction}: ICard
     // Define a cor do ícone 
     const iconColor = isHighlight ? 'text.secondary' : (title === 'Entrada' ? 'primary.light' : 'secondary.main');
     const bgColor = isHighlight ? 'primary.dark' : 'background.paper';
-    const footerTextColor = !isHighlight ? 'text.primary' : 'text.disabled';
+    const footerTextColor = !isHighlight ? '#969cb3' : 'text.primary';
 
     return (
         <Card sx={{
