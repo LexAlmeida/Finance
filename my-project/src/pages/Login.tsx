@@ -1,42 +1,11 @@
 import { Box, Button, Paper, Stack, TextField, Typography, InputAdornment, Link } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import { useForm } from "react-hook-form";
-import { useState } from "react";
 import SavingsIcon from '@mui/icons-material/Savings';
 import EmailIcon from '@mui/icons-material/Email';
 import LockIcon from '@mui/icons-material/Lock';
-import { loginService } from "../shared/services/auth";
-import { useAuth } from "../shared/context/AuthContext";
+import { useLogin } from "../shared/hooks/useLogin";
 
 export const Login = () => {
-    const navigate = useNavigate();
-    const { loginSuccess } = useAuth();
-    const [loginError, setLoginError] = useState<string|null>(null);
-
-    const {
-        register,
-        handleSubmit,
-        formState: { errors, isSubmitting},
-    } = useForm({
-        defaultValues: {
-            email: '',
-            password: ''
-        }
-    })
-    
-    const onSubmit = async (data: any) => {
-        try {
-            setLoginError(null);
-            const response = await loginService(data.email, data.password);
-
-            loginSuccess(response.token, response.refreshToken,response.usuario);
-            navigate("/pagina-inicial")
-        }
-        catch(error: any){
-            const message = error.response?.data?.erro || "Erro ao realizar o login";
-            setLoginError(message)
-        }
-    }
+    const { register, handleSubmit, errors, isSubmitting, loginError } = useLogin();
 
     return (
         <Box
@@ -64,26 +33,20 @@ export const Login = () => {
                 <Stack direction="column" alignItems="center" spacing={2} sx={{ mb: 4 }}>
                     <Stack direction="row" alignItems="center" spacing={1}>
                         <SavingsIcon sx={{ color: 'primary.main', fontSize: 40 }} />
-                        <Typography variant="h4" fontWeight="bold">
-                            Finance
-                        </Typography>
+                        <Typography variant="h4" fontWeight="bold">Finance</Typography>
                     </Stack>
-                    <Typography variant="body2" color="text.secondary" sx={{ color: '#7c7c8a' }}>
+                    <Typography variant="body2" sx={{ color: '#7c7c8a' }}>
                         Faça login para acessar suas contas
                     </Typography>
                 </Stack>
 
-                {/* Formulário */}
-                <Stack component='form'
-                    onSubmit={handleSubmit(onSubmit)} spacing={3}>
+                <Stack component='form' onSubmit={handleSubmit} spacing={3}>
                     <TextField
                         fullWidth
-                        {...register("email", {
-                            required: "O email é obrigatório"
-                        })}
+                        label="Email"
+                        {...register("email", { required: "O email é obrigatório" })}
                         error={!!errors.email || !!loginError}
                         helperText={errors.email?.message as string} 
-                        
                         InputLabelProps={{ style: { color: '#7c7c8a' } }}
                         InputProps={{
                             startAdornment: (
@@ -107,12 +70,9 @@ export const Login = () => {
                         type="password"
                         {...register("password", {
                             required: "A senha é obrigatória",
-                            minLength: {value: 4, message: `A senha deve ter no minimo 6 caracteres`}
                         })}
-                        
                         error={!!errors.password || !!loginError} 
                         helperText={(errors.password?.message as string) || (loginError ? "Usuário ou senha inválidos." : "")} 
-                        
                         InputLabelProps={{ style: { color: '#7c7c8a' } }}
                         InputProps={{
                             startAdornment: (
@@ -140,17 +100,16 @@ export const Login = () => {
                             color: 'white',
                             fontWeight: 'bold',
                             padding: '12px',
-                            '&:hover': {
-                                backgroundColor: 'primary.dark',
-                            }
+                            '&:hover': { backgroundColor: 'primary.dark' }
                         }}
                     >
-                        {isSubmitting ? "CARREGANDO" : "ENTRAR"}
+                        {isSubmitting ? "CARREGANDO..." : "ENTRAR"}
                     </Button>
                 </Stack>
+
                 <Stack direction="row" justifyContent="center" sx={{ mt: 3 }}>
                     <Typography variant="body2" sx={{ color: '#7c7c8a' }}>
-                        Não tem uma conta? <Link href="/register" underline='hover' style={{ color: 'primary.main', cursor: 'pointer', fontWeight: 'bold' }}>Registre-se</Link>
+                        Não tem uma conta? <Link href="/register" underline='hover' sx={{ color: 'primary.main', cursor: 'pointer', fontWeight: 'bold' }}>Registre-se</Link>
                     </Typography>
                 </Stack>
             </Paper>
