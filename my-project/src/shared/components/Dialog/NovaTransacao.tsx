@@ -1,9 +1,10 @@
 
 import CloseIcon from '@mui/icons-material/Close';
-import { Button, Dialog, DialogContent, DialogTitle, IconButton, Stack } from "@mui/material";
+import { Button, Dialog, DialogContent, DialogTitle, IconButton, Stack, useMediaQuery, useTheme } from "@mui/material";
 import { useState } from "react";
 import { BoxInputs } from '../Box';
 import { createTransaction } from '../../services/transactions';
+import AddIcon from '@mui/icons-material/Add';
 
 interface InputState {
     nome: string;
@@ -17,6 +18,8 @@ interface NovaTransacaoProps {
 export const NovaTransacao = ({onSuccess}: NovaTransacaoProps) => {
     const [open, setOpen] = useState(false);
     const [tipoSelecionado, setTipoSelecionado] = useState<'entrada' | 'saida' | null>(null);
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
  
     const handleClickOpen = () => setOpen(true);
     const handleClickClose = () => {
@@ -56,10 +59,15 @@ export const NovaTransacao = ({onSuccess}: NovaTransacaoProps) => {
     };
     return (
     <>
-        <Button variant='contained' color='primary' onClick={handleClickOpen} sx={{
-            padding:"15px"
-        }}>
-            Nova transação
+        <Button 
+            variant='contained' 
+            color='primary' 
+            onClick={handleClickOpen} 
+            sx={{
+                minWidth: isMobile ? 'auto' : '150px',
+                padding: isMobile ? '8px 16px' : '10px 24px'
+            }}>
+            {isMobile ? <AddIcon/> : 'Nova Transação'}
         </Button>
         <Dialog 
             open={open} 
