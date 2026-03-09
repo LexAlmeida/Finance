@@ -1,42 +1,12 @@
 import { Box, Button, Link, Paper, Stack, TextField, Typography, InputAdornment } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
 import SavingsIcon from '@mui/icons-material/Savings';
 import EmailIcon from '@mui/icons-material/Email';
 import LockIcon from '@mui/icons-material/Lock';
-import { cadastrarUsuario } from "../shared/services/users";
-import { useForm } from "react-hook-form";
+import { useRegister } from "../shared/hooks/useRegister";
 
 
 export const Register = () => {
-    const navigate = useNavigate();
-    const [registerError, setRegisterError] = useState<string | null>(null);
-
-    const {
-        register,
-        handleSubmit,
-        formState: {errors, isSubmitting},
-    } = useForm({
-        defaultValues:{
-            email: '',
-            password:''
-        }
-    })
-
-    const onSubmit = async (data: any) => {
-        try{
-            setRegisterError(null);
-
-            await cadastrarUsuario(data.email.trim(), data.password.trim());
-
-            alert("Conta criada com sucesso! Faça login para continuar.");
-
-            navigate('/login');
-        } catch (error: any) {
-            const message = error.response?.data?.erro || "Erro ao criar conta.";
-            setRegisterError(message);
-        }
-    };
+    const { register, handleSubmit, errors, isSubmitting, registerError, onSubmit } = useRegister()
 
     return (
         <Box
@@ -81,10 +51,6 @@ export const Register = () => {
                         placeholder="Digite seu melhor email"
                         {...register('email', {
                             required: "O e-mail é obrigatório",
-                            pattern:{
-                                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                                message: "Endereco de email invalido"
-                            }
                         })}
 
                         error={!!errors.email || !!registerError}
