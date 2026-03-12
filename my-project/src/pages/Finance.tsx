@@ -1,4 +1,4 @@
-import { Stack, Pagination, Box } from "@mui/material"; 
+import { Stack, Pagination, Box, Skeleton } from "@mui/material"; 
 import { Cards } from "../shared/components/Cards";
 import { BoxPrincipal, Search } from "../shared/components/Box";          
 import { TabelaTransacoes } from "../shared/components/Tabela"; 
@@ -7,6 +7,7 @@ import { useFinance } from "../shared/hooks/useFinance";
 
 export const Finance = () => {
     const {
+        loading,
         paginaAtual,
         totalPaginas,
         carregarDados,
@@ -31,8 +32,15 @@ export const Finance = () => {
                     <Search />
                 </Box>
             </Box>
-
-            <TabelaTransacoes />
+            {loading ? (
+                <Stack spacing={1} sx={{ mt: 2 }}>
+                    <Skeleton variant="rectangular" height={60} animation="wave" />
+                    <Skeleton variant="rectangular" height={60} animation="wave" />
+                    <Skeleton variant="rectangular" height={60} animation="wave" />
+                </Stack>
+            ) : (
+                <TabelaTransacoes />
+            )}
 
             <Stack spacing={2} sx={{ alignItems: 'center', mt: 4, mb: 2 }}>
                 <Pagination 

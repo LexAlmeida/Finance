@@ -17,7 +17,7 @@ export const Cards = () => {
             <Box
                 sx={{
                     display:'flex',
-                    gap: 2,
+                    gap: 4.3,
                     mt: { xs: -10, sm: -5 },
                     overflowX:'auto',
                     pb: 1,
