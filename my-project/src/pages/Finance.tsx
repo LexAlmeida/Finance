@@ -7,11 +7,9 @@ import { useFinance } from "../shared/hooks/useFinance";
 
 export const Finance = () => {
     const {
-        transacoesFiltradas,
         paginaAtual,
         totalPaginas,
         carregarDados,
-        handleDeleteTransacao
     } = useFinance();
 
     return (
@@ -34,10 +32,7 @@ export const Finance = () => {
                 </Box>
             </Box>
 
-            <TabelaTransacoes 
-                transacoes={transacoesFiltradas} 
-                onDelete={handleDeleteTransacao} 
-            />
+            <TabelaTransacoes />
 
             <Stack spacing={2} sx={{ alignItems: 'center', mt: 4, mb: 2 }}>
                 <Pagination 

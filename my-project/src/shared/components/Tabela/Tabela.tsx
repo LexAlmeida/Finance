@@ -1,6 +1,8 @@
 import { Box, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableRow, Typography, useMediaQuery, useTheme} from "@mui/material";
 import { LinhaTransacao } from "./DesktopRow";
 import { CardMobile } from "./MobileCard";
+import { useContext } from "react";
+import { FinanceContext } from "../../context/FinanceContext";
 
 // Interface 
 export interface ITransacao { 
@@ -12,14 +14,9 @@ export interface ITransacao {
     data:string;
 }
 
-// Interface de Propriedades - Recebe a lista já filtrada do Finance
-interface TabelaProps {
-    transacoes: ITransacao[];
-    onDelete?: (id: number) => void;
-    onEdit?: (transacao: ITransacao) => void;
-}
+export const TabelaTransacoes = () => {
+    const {transacoesFiltradas, handleDeleteTransacao} = useContext(FinanceContext)
 
-export const TabelaTransacoes = ({ transacoes, onDelete }: TabelaProps) => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('md'));
     
@@ -29,11 +26,11 @@ export const TabelaTransacoes = ({ transacoes, onDelete }: TabelaProps) => {
                 <Stack direction='row' justifyContent='space-between' sx={{mb:2, color: 'white'}}>
                     <Typography>Transações</Typography>
                     <Typography sx={{color:'#969cb3'}}>
-                        {transacoes.length} itens
+                        {transacoesFiltradas.length} itens
                     </Typography>
                 </Stack>
-                {transacoes.map((t) => (
-                    <CardMobile key={t.id} transacao={t} onDelete={onDelete}/>
+                {transacoesFiltradas.map((t) => (
+                    <CardMobile key={t.id} transacao={t} onDelete={handleDeleteTransacao}/>
                 ))}
             </Box>
         )
@@ -45,9 +42,9 @@ export const TabelaTransacoes = ({ transacoes, onDelete }: TabelaProps) => {
         >
             <Table sx={{minWidth:{xs: '700px', md:'100%'}}} aria-label="simple table">
                 <TableBody>
-                    {transacoes.length > 0 ? (
-                        transacoes.map((t) => (
-                            <LinhaTransacao key={t.id} transacao={t} onDelete={onDelete}/>
+                    {transacoesFiltradas.length > 0 ? (
+                        transacoesFiltradas.map((t) => (
+                            <LinhaTransacao key={t.id} transacao={t} onDelete={handleDeleteTransacao}/>
                         ))
                     ) : (
                         <TableRow>
