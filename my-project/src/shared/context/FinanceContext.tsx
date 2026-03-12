@@ -4,9 +4,9 @@ import { getTransactions, deleteTransaction } from "../services/transactions";
 import { type ITransacao } from "../components/Tabela";
 
 interface IResumo {
+    total: number;
     entradas: number;
     saidas: number;
-    total: number;
 }
 
 interface IFinanceContextData {
@@ -21,20 +21,14 @@ interface IFinanceContextData {
     handleDeleteTransacao: (id: number) => Promise<void>;
 }
 
-export 
-
-
-
-
-
-const FinanceContext = createContext<IFinanceContextData>({} as IFinanceContextData);
+export const FinanceContext = createContext<IFinanceContextData>({} as IFinanceContextData);
 
 export const FinanceProvider = ({children}: {children: React.ReactNode}) => {
     const [transacoesCompletas, setTransacoesCompletas] = useState<ITransacao[]>([]);
         const [paginaAtual, setPaginaAtual] = useState(1);
         const [totalPaginas, setTotalPaginas] = useState(1);
         const [filtro, setFiltro] = useState('');
-        const [resumoDados, setResumoDados] = useState<IResumo>({ entradas: 0, saidas: 0, total: 0 });
+        const [resumoDados, setResumoDados] = useState<IResumo>({ total: 0, entradas: 0, saidas: 0 });
     
         // calculo do resumo global
         const buscarResumoGlobal = useCallback(async () => {

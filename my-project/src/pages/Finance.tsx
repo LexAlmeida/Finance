@@ -8,8 +8,6 @@ import { useFinance } from "../shared/hooks/useFinance";
 export const Finance = () => {
     const {
         transacoesFiltradas,
-        transacoesCompletas,
-        resumoDados,
         paginaAtual,
         totalPaginas,
         carregarDados,
@@ -29,7 +27,7 @@ export const Finance = () => {
                 pb: 2,
                 mt: -2 
             }}>
-                <Cards resumo={resumoDados} transacoes={transacoesCompletas} />
+                <Cards />
                 
                 <Box sx={{ mt: 2 }}>
                     <Search />

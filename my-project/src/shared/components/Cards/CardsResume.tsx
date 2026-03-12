@@ -1,16 +1,8 @@
 import { Box } from '@mui/material';
 import { MyCard } from './MyCards';
-import type { ITransacao } from '../Tabela';
 import { getUltimaData } from '../../services/utils';
-
-interface CardProps {
-    resumo: {
-        total: number;
-        entradas: number;
-        saidas: number;
-    };
-    transacoes: ITransacao[]
-}
+import { useContext } from 'react';
+import { FinanceContext } from '../../context/FinanceContext';
 
 const formatarPreco = (preco: number): string => {
     return new Intl.NumberFormat('pt-br', {
@@ -19,7 +11,8 @@ const formatarPreco = (preco: number): string => {
     }).format(preco)
 }
 
-export const Cards = ({ resumo, transacoes = [] }: CardProps ) => {
+export const Cards = () => {
+    const {resumoDados, transacoesCompletas} = useContext(FinanceContext)
     return (
             <Box
                 sx={{
@@ -47,24 +40,24 @@ export const Cards = ({ resumo, transacoes = [] }: CardProps ) => {
             >
                 <MyCard
                     title="Entrada"
-                    value={formatarPreco(resumo.entradas)}
+                    value={formatarPreco(resumoDados.entradas)}
                     icon="arrowUp"
                     isHighlight={false}
-                    lastTransaction={getUltimaData(transacoes, 'entrada')}
+                    lastTransaction={getUltimaData(transacoesCompletas, 'entrada')}
                 />
                 <MyCard
                     title="Saída"
-                    value={formatarPreco(resumo.saidas)}
+                    value={formatarPreco(resumoDados.saidas)}
                     icon="arrowDown"
                     isHighlight={false}
-                    lastTransaction={getUltimaData(transacoes, 'saida')}
+                    lastTransaction={getUltimaData(transacoesCompletas, 'saida')}
                 />
                 <MyCard
                     title="Total"
-                    value={formatarPreco(resumo.total)}
+                    value={formatarPreco(resumoDados.total)}
                     icon="money"
                     isHighlight={true} //card verde de destaque
-                    lastTransaction={getUltimaData(transacoes)}
+                    lastTransaction={getUltimaData(transacoesCompletas)}
                 />
             </Box>
     )
