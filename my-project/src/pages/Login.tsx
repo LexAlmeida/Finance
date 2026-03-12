@@ -47,9 +47,10 @@ export const Login = () => {
                         {...register("email", { required: "O email é obrigatório" })}
                         error={!!errors.email || !!loginError}
                         helperText={errors.email?.message as string} 
-                        InputLabelProps={{ style: { color: '#7c7c8a' } }}
-                        InputProps={{
-                            startAdornment: (
+                        slotProps={{
+                            inputLabel:{sx:{color: '#7c7c8a' }},
+                            input:{
+                                startAdornment: (
                                 <InputAdornment position="start">
                                     <EmailIcon sx={{ color: (errors.email || loginError) ? 'secondary.main' : '#00B37E' }} /> 
                                 </InputAdornment>
@@ -60,6 +61,7 @@ export const Login = () => {
                                 '& .MuiOutlinedInput-notchedOutline': { borderColor: '#323238' },
                                 '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: 'primary.main' },
                                 '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: 'primary.main' },
+                            }
                             }
                         }}
                     />
@@ -73,9 +75,10 @@ export const Login = () => {
                         })}
                         error={!!errors.password || !!loginError} 
                         helperText={(errors.password?.message as string) || (loginError ? "Usuário ou senha inválidos." : "")} 
-                        InputLabelProps={{ style: { color: '#7c7c8a' } }}
-                        InputProps={{
-                            startAdornment: (
+                        slotProps={{
+                            inputLabel:{sx: { color: '#7c7c8a' }},
+                            input:{
+                                startAdornment: (
                                 <InputAdornment position="start">
                                     <LockIcon sx={{ color: (errors.password || loginError) ? 'secondary.main' : 'primary.main' }} />
                                 </InputAdornment>
@@ -86,6 +89,7 @@ export const Login = () => {
                                 '& .MuiOutlinedInput-notchedOutline': { borderColor: '#323238' },
                                 '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: 'primary.main' },
                                 '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: 'primary.main' },
+                            }
                             }
                         }}
                     />

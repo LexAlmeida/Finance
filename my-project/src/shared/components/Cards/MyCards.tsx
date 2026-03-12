@@ -27,7 +27,7 @@ export const MyCard = ({title, value, icon, isHighlight, lastTransaction}: ICard
 
     return (
         <Card sx={{
-            minWidth:{xs:'280px', sm: '350px'}, 
+            minWidth:{xs:'280px', sm: '320px', md: '362px'}, 
             flexShrink:0,
             borderRadius: "6px",
             mb: {xs:2, sm:0},

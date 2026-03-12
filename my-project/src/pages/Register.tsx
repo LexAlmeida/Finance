@@ -55,10 +55,10 @@ export const Register = () => {
 
                         error={!!errors.email || !!registerError}
                         helperText={(errors.email?.message as string) || (registerError ? "Não foi possível realizar o cadastro." : "")} 
-                        
-                        InputLabelProps={{ style: { color: '#7c7c8a' } }}
-                        InputProps={{
-                            startAdornment: (
+                        slotProps={{
+                            inputLabel:{sx:{ color: '#7c7c8a' }},
+                            input: {
+                                startAdornment: (
                                 <InputAdornment position="start">
                                     <EmailIcon sx={{ color: (errors.email || registerError) ? 'secondary.main' : '#00B37E' }} /> 
                                 </InputAdornment>
@@ -69,6 +69,7 @@ export const Register = () => {
                                 '& .MuiOutlinedInput-notchedOutline': { borderColor: '#323238' },
                                 '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: 'primary.main' },
                                 '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: 'primary.main' },
+                            }
                             }
                         }}
                     />
@@ -85,10 +86,10 @@ export const Register = () => {
                         })}
                         error={!!errors.password || !!registerError} 
                         helperText={(errors.password?.message as string) || (registerError ? "Não foi possível realizar o cadastro." : "")} 
-                        
-                        InputLabelProps={{ style: { color: '#7c7c8a' } }}
-                        InputProps={{
-                            startAdornment: (
+                        slotProps={{
+                            inputLabel:{sx:{ color: '#7c7c8a' }},
+                            input: {
+                                startAdornment: (
                                 <InputAdornment position="start">
                                     <LockIcon sx={{ color: (errors.password || registerError) ? 'secondary.main' : 'primary.main' }} />
                                 </InputAdornment>
@@ -99,6 +100,7 @@ export const Register = () => {
                                 '& .MuiOutlinedInput-notchedOutline': { borderColor: '#323238' },
                                 '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: 'primary.main' },
                                 '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: 'primary.main' },
+                            }
                             }
                         }}
                     />
