@@ -5,25 +5,20 @@ import { TabelaTransacoes } from "../shared/components/Tabela";
 import { Outlet } from "react-router-dom";
 import { useFinance } from "../shared/hooks/useFinance";
 
-interface IFinanceProps {
-    setCarregarTransacoes: (fn: () => void) => void;
-}
-
-export const Finance = ({ setCarregarTransacoes }: IFinanceProps) => {
+export const Finance = () => {
     const {
         transacoesFiltradas,
         transacoesCompletas,
         resumoDados,
         paginaAtual,
         totalPaginas,
-        setFiltro,
         carregarDados,
         handleDeleteTransacao
-    } = useFinance(setCarregarTransacoes);
+    } = useFinance();
 
     return (
         <BoxPrincipal>
-            <Outlet context={{ carregarTransacoes: carregarDados }} />
+            <Outlet />
             
             <Box sx={{
                 position: 'sticky',
@@ -37,7 +32,7 @@ export const Finance = ({ setCarregarTransacoes }: IFinanceProps) => {
                 <Cards resumo={resumoDados} transacoes={transacoesCompletas} />
                 
                 <Box sx={{ mt: 2 }}>
-                    <Search setFiltro={setFiltro} />
+                    <Search />
                 </Box>
             </Box>
 

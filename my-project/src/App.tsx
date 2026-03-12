@@ -4,6 +4,7 @@ import { ThemeContext } from "./shared/context/ThemeContext"
 import CSSBaseLine from "@mui/material/CssBaseline"
 import { TransactionsProvider } from "./shared/context/TransactionsContext" 
 import { AuthProvider } from "./shared/context/AuthContext"
+import { FinanceProvider } from "./shared/context/FinanceContext"
 
 function App() {
 
@@ -13,8 +14,10 @@ function App() {
         <AuthProvider>
           <ThemeContext>
             <TransactionsProvider>
-              <CSSBaseLine/>
-              <AppRoutes/>
+              <FinanceProvider>
+                <CSSBaseLine/>
+                <AppRoutes/>
+              </FinanceProvider>
             </TransactionsProvider>
           </ThemeContext>
         </AuthProvider>

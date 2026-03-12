@@ -1,16 +1,15 @@
 import { Box, TextField } from "@mui/material"
 import { ButtonSearch } from "../Button"
 import { useForm } from "react-hook-form";
-
-interface SearchProps {
-    setFiltro: React.Dispatch<React.SetStateAction<string>>;
-}
+import { useContext } from "react";
+import { FinanceContext } from "../../context/FinanceContext";
 
 interface SearchFromInputs {
     busca: string
 }
 
-export const Search = ({ setFiltro }: SearchProps) => {
+export const Search = () => {
+    const {setFiltro} = useContext(FinanceContext)
     const {register, handleSubmit} = useForm<SearchFromInputs>({
         defaultValues: {
             busca: ''
