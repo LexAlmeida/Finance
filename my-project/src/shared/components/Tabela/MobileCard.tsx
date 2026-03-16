@@ -1,6 +1,8 @@
-import { Box, Stack, Typography } from "@mui/material";
+import { Box, IconButton, Stack, Typography } from "@mui/material";
 import type { ITransacao } from "./Tabela";
 import LabelOutlinedIcon from '@mui/icons-material/LabelOutlined';
+import  DeleteOutlineIcon  from "@mui/icons-material/DeleteOutline";
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 
 export const CardMobile = ({transacao, onDelete}:{transacao:ITransacao, onDelete?: (id:number) => void}) => {
     const isSaida = transacao.tipo === 'saida';
@@ -10,14 +12,33 @@ export const CardMobile = ({transacao, onDelete}:{transacao:ITransacao, onDelete
         currency: 'BRL'
     }).format(Math.abs(transacao.valor));
 
+    const dataFormatada = new Intl.DateTimeFormat('pt-BR')
+        .format(new Date(transacao.data))
+
     return (
         <Box sx={{ 
             bgcolor: '#29292e',
             borderRadius: '6px', 
             p: 2.5, 
             mb: 2,
-            color: 'white'
+            color: 'white',
+            position: 'relative'
         }}>
+            {onDelete && (
+                <IconButton
+                    onClick={() => onDelete(transacao.id)}
+                    size="small"
+                    sx={{
+                        color:'#f75a68', 
+                        position: 'absolute',
+                        top: 25,
+                        right: 25,
+                        p: 0
+                    }}
+                >
+                    <DeleteOutlineIcon fontSize="medium"/>
+                </IconButton>
+            )}
             <Typography sx={{ color: 'text.primary', fontSize: '1rem', mb: 0.5 }}>
                 {transacao.nome}
             </Typography>
@@ -31,13 +52,15 @@ export const CardMobile = ({transacao, onDelete}:{transacao:ITransacao, onDelete
                 {isSaida ? `- ${valorFormatado}` : valorFormatado}
             </Typography>
 
-            <Stack direction="row" justifyContent="space-between" sx={{ color: '#969cb3' }}>
-                <Typography sx={{ display: 'flex', alignItems: 'center', gap: 1, fontSize: '0.875rem' }}>
-                    <LabelOutlinedIcon/>
+            <Stack direction="row" justifyContent="space-between" sx={{ color: '#8e93a59c' }}>
+                <Typography sx={{ display: 'flex', alignItems: 'center', gap: 0.5, fontSize: '0.875rem' }}>
+                    <LabelOutlinedIcon />
                     {transacao.categoria}
                 </Typography>
-                <Typography sx={{ fontSize: '0.875rem' }}>
-                    {transacao.data}
+                 
+                <Typography sx={{ display:'flex', alignItems: 'center', gap:0.5, fontSize: '0.875rem' }}>
+                    <CalendarTodayIcon sx={{ fontSize: '0.875rem'}}/>
+                    {dataFormatada}
                 </Typography>
             </Stack>
         </Box>

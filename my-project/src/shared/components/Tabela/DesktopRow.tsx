@@ -17,6 +17,8 @@ export const LinhaTransacao = ({transacao, onDelete}: {
         style:'currency',
         currency: 'BRL'
     }).format(Math.abs(transacao.valor));
+    const dataFormatada = new Intl.DateTimeFormat('pt-BR')
+        .format(new Date(transacao.data))
 
     return (
         <TableRow
@@ -62,7 +64,7 @@ export const LinhaTransacao = ({transacao, onDelete}: {
                     whiteSpace:'nowrap'
                 }}
             >
-                {transacao.data}
+                {dataFormatada}
             </TableCell>
 
             <TableCell align="right" sx={{borderBottom: `1px solid ${styles.border}`}}>
