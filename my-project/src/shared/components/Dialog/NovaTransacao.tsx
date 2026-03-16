@@ -1,6 +1,6 @@
 
 import CloseIcon from '@mui/icons-material/Close';
-import { Button, Dialog, DialogContent, DialogTitle, IconButton, Stack, useMediaQuery, useTheme } from "@mui/material";
+import { Button, Dialog, DialogContent, DialogTitle, IconButton, Slide, Stack, useMediaQuery, useTheme } from "@mui/material";
 import { useState } from "react";
 import { BoxInputs } from '../Box';
 import { createTransaction } from '../../services/transactions';
@@ -59,34 +59,49 @@ export const NovaTransacao = ({onSuccess}: NovaTransacaoProps) => {
     };
     return (
     <>
-        <Button 
-            variant='contained' 
-            color='primary' 
-            onClick={handleClickOpen} 
-            sx={{
-                minWidth: isMobile ? 'auto' : '150px',
-                padding: isMobile ? '8px 16px' : '10px 24px'
-            }}>
-            {isMobile ? <AddIcon/> : 'Nova Transação'}
-        </Button>
-        <Dialog 
-            open={open} 
-            onClose={handleClickClose}
-            slotProps={{
-                paper: {
-                    sx: {backgroundColor: 'background.default', borderRadius: '6px', minWidth: '450px', p: 2}
-                }
-            }}>
+            <Button 
+                variant='contained' 
+                color='primary' 
+                onClick={handleClickOpen} 
+                sx={{
+                    minWidth: isMobile ? 'auto' : '150px',
+                    padding: isMobile ? '8px 16px' : '10px 24px'
+                }}>
+                {isMobile ? <AddIcon/> : 'Nova Transação'}
+            </Button>
+            <Dialog 
+                open={open} 
+                onClose={handleClickClose}
+                slots={isMobile ? { transition: Slide } : undefined}
+                slotProps={{
+                    transition: isMobile ? { direction: 'up' } as any : undefined,
+                    paper: {
+                        sx: {
+                            backgroundColor: 'background.default', 
+                            borderRadius: isMobile ? '16px 16px 0 0' : '6px', 
+                            minWidth: isMobile ? 'unset' : '450px', 
+                            width: isMobile ? '100%' : 'auto',
+                            m: isMobile ? 0 : 2,
+                            p: 1,
+                            position: isMobile ? 'fixed' : 'relative',
+                            bottom: isMobile ? 0 : 'auto'
+                        }
+                    }
+                }}  
+                sx={{
+                    '&:MuiDialog-Container': {alignItems: isMobile ? 'flex-end' : 'center'}
+                }}
+            >
             <IconButton 
                 onClick={handleClickClose}  
                 sx={{
                     position: 'absolute',
                     alignSelf: 'flex-end',
-                    right: '16',
-                    top: '16',
+                    right: 16,
+                    top: 16,
                     p: 0,
                     color: 'text.primary'
-                }}>
+                    }}>
                 <CloseIcon/>
             </IconButton>
 
