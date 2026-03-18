@@ -1,18 +1,36 @@
 import { Box } from '@mui/material';
 import { MyCard } from './MyCards';
-import { getUltimaData } from '../../services/utils';
+import { formatarPreco, getUltimaData } from '../../services/utils';
 import { useContext } from 'react';
 import { FinanceContext } from '../../context/FinanceContext';
 
-const formatarPreco = (preco: number): string => {
-    return new Intl.NumberFormat('pt-br', {
-        style:'currency',
-        currency: 'BRL'
-    }).format(preco)
-}
-
 export const Cards = () => {
-    const {resumoDados, transacoesCompletas} = useContext(FinanceContext)
+    const {resumoDados, transacoesCompletas} = useContext(FinanceContext);
+
+    const cards = [
+        {
+          title:'Entrada',
+          value: formatarPreco(resumoDados.entradas),
+          icon: 'arrowUp' as const,
+          isHighlight: false,
+          lastTransaction: getUltimaData(transacoesCompletas, 'entrada'),
+        },
+        {
+          title:'Saída',
+          value: formatarPreco(resumoDados.saidas),
+          icon: 'arrowDown' as const,
+          isHighlight: false,
+          lastTransaction: getUltimaData(transacoesCompletas, 'saida'),
+        },
+        {
+          title:'Total',
+          value: formatarPreco(resumoDados.total),
+          icon: 'money' as const,
+          isHighlight: true,
+          lastTransaction: getUltimaData(transacoesCompletas)
+        }
+    ]
+        
     return (
             <Box
                 sx={{
@@ -38,27 +56,9 @@ export const Cards = () => {
                     }
                 }}
             >
-                <MyCard
-                    title="Entrada"
-                    value={formatarPreco(resumoDados.entradas)}
-                    icon="arrowUp"
-                    isHighlight={false}
-                    lastTransaction={getUltimaData(transacoesCompletas, 'entrada')}
-                />
-                <MyCard
-                    title="Saída"
-                    value={formatarPreco(resumoDados.saidas)}
-                    icon="arrowDown"
-                    isHighlight={false}
-                    lastTransaction={getUltimaData(transacoesCompletas, 'saida')}
-                />
-                <MyCard
-                    title="Total"
-                    value={formatarPreco(resumoDados.total)}
-                    icon="money"
-                    isHighlight={true} //card verde de destaque
-                    lastTransaction={getUltimaData(transacoesCompletas)}
-                />
+               {cards.map((card:any) => (
+                <MyCard key={card.title} {...card}/>
+               ))}
             </Box>
     )
 }

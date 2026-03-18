@@ -18,3 +18,10 @@ export const getUltimaData = (transacoes: ITransacao[], tipo?: 'entrada'|'saida'
 
     return `Última ${tipo} em ${dataFormatada}`
 }
+
+export const formatarPreco = (preco: number): string => {
+    return new Intl.NumberFormat('pt-br', {
+        style:'currency',
+        currency: 'BRL'
+    }).format(preco)
+}
