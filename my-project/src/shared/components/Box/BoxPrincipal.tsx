@@ -10,7 +10,6 @@ export const BoxPrincipal = ({children}: IDivPrincipal) => {
             sx={{
                 display: 'flex',
                 flexDirection: 'column',
-                maxWidth: '1120px', 
                 margin: '0 auto', 
                 padding: { xs: '0 20px', sm: '0 30px', md: '0 0' }, 
                 minHeight: '100%',

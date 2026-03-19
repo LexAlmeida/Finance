@@ -39,8 +39,6 @@ export const Cards = () => {
         mt: { xs: -10, sm: -5 },
         overflowX: "auto",
         pb: 1,
-        mx: { xs: "-2px", sm: 0 },
-        px: { xs: "2px", sm: 0 },
         "&::-webkit-scrollbar": { height: "4px" },
         "&::-webkit-scrollbar-track": { background: "transparent" },
         "&::-webkit-scrollbar-thumb": {
@@ -49,11 +47,6 @@ export const Cards = () => {
         },
         "&::-webkit-scrollbar-thumb:hover": { background: "#00b37e" },
         justifyContent: { xs: "flex-start", sm: "space-between" },
-
-        // ajuste pro mobile
-        marginLeft: { xs: "calc(-50vw + 50%)", sm: 0 }, // centraliza compensando o container
-        marginRight: { xs: "calc(-50vw + 50%)", sm: 0 },
-        paddingLeft: { xs: 2, sm: 0 }, // mantem o primeiro card alinhado com o conteudo
 
         "&::after": {
           content: '""',
